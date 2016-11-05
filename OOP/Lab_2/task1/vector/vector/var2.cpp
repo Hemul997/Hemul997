@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
 	vector<double> numbers = ReadVector(cin);
-	WorkWithVector(numbers);
+	ProcessVector(numbers);
 	SortVector(numbers);
 	OutVector(cout, numbers);
 	return 0;

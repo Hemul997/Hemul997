@@ -5,5 +5,5 @@ using namespace std;
 
 vector<double> ReadVector(istream & input);
 void SortVector(vector<double> & numbers);
-void WorkWithVector(vector<double> & numbers);
+void ProcessVector(vector<double> & numbers);
 void OutVector(ostream & output, vector<double> & numbers);
