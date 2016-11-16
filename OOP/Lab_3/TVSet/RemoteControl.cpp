@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "RemoteControl.h"
 #include "TVSet.h"
-
+#include <windows.h>
+#include <locale>
 
 using namespace std;
 using namespace std::placeholders;
+
 
 
 
@@ -13,9 +15,7 @@ CRemoteControl::CRemoteControl(CTVSet & tv, std::istream & input, std::ostream &
 	, m_input(input)
 	, m_output(output)
 	, m_actionMap({
-		{ "TurnOn", [this](istream & strm) {
-				return TurnOn(strm);
-			} },
+		{ "TurnOn", bind(&CRemoteControl::TurnOn, this, _1) },
 		{ "TurnOff", bind(&CRemoteControl::TurnOff, this, _1) },
 		{ "Info", bind(&CRemoteControl::Info, this, _1) },
 		{ "SelectChannel", bind(&CRemoteControl::SelectChannel, this, _1) },
@@ -23,7 +23,8 @@ CRemoteControl::CRemoteControl(CTVSet & tv, std::istream & input, std::ostream &
 		{ "SetChannelName", bind(&CRemoteControl::SetChannelName, this, _1) },
 		{ "DeleteChannelName", bind(&CRemoteControl::DeleteChannelName, this, _1) },
 		{ "GetChannelName", bind(&CRemoteControl::GetChannelName, this, _1) },
-		{ "GetChannelByName", bind(&CRemoteControl::GetChannelByName, this, _1) }
+		{ "GetChannelByName", bind(&CRemoteControl::GetChannelByName, this, _1) },
+		{ "--help", bind(&CRemoteControl::Help, this, _1) }
 	})
 {
 }
@@ -69,10 +70,7 @@ bool CRemoteControl::Info(std::istream & /*args*/)
 	m_output << info;
 	if(m_tv.IsTurnedOn())
 	{
-		for (auto it = m_tv.m_channelMap.begin(); it != m_tv.m_channelMap.end(); ++it)
-		{
-			m_output << it->first << " - " << it->second << "\n";
-		}
+		m_tv.PrintMap(m_output);
 	}
 	return true;
 }
@@ -170,9 +168,10 @@ bool CRemoteControl::GetChannelName(std::istream & args)
 	{
 		int num;
 		args >> num;
-		if (m_tv.GetChannelName(num))
+		std::string str = m_tv.GetChannelName(num);
+		if (!str.empty())
 		{
-			m_output << m_tv.ReturnChannelName() << " is gotten channel name\n";
+			m_output << str << " is gotten channel name\n";
 		}
 		else
 		{
@@ -191,9 +190,10 @@ bool CRemoteControl::GetChannelByName(std::istream & args)
 	{
 		string str;
 		getline(args, str);
-		if (m_tv.GetChannelByName(str))
+		int num = m_tv.GetChannelByName(str);
+		if (num != 0)
 		{
-			m_output << m_tv.ReturnChannelNumber() << " is gotten channel number\n";
+			m_output << num << " is gotten channel number\n";
 		}
 		else
 		{
@@ -204,5 +204,19 @@ bool CRemoteControl::GetChannelByName(std::istream & args)
 	{
 		m_output << "Can't get channel because TV is turned off\n";
 	}
+	return true;
+}
+bool CRemoteControl::Help(std::istream & /*args*/)
+{
+	m_output << "Use to next commands:\n"
+		<< "TurnOn\n"
+		<< "TurnOff\n"
+		<< "Info\n"
+		<< "SelectChannel <num of channel>\n"
+		<< "SelectChannel <name of channel>\n"
+		<< "SetChannelName <num of channel> <name of channel>\n"
+		<< "GetChannelName <num of channel>\n"
+		<< "GetChannelByName <name of channel>\n"
+		<< "DeleteChannelName <name of channel>\n";
 	return true;
 }

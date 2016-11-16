@@ -8,21 +8,24 @@ public:
 	void TurnOff();
 	int GetChannel()const;
 	bool SelectChannel(int channel);
-	int ReturnPreviousChannel()const;
-	bool SelectChannel(const std::string channel);
-	bool SetChannelName(int num, std::string channelNam);
-	bool DeleteChannelName(std::string channelName);
-	bool GetChannelName(int channel);
-	bool GetChannelByName(std::string channelName);
-	bool CTVSet::SelectPreviousChannel();
+
+	int GetPreviousChannel()const;
+	
+	bool SelectChannel(const std::string & channel);
+	bool SetChannelName(int channel, std::string const & channelName);
+	bool DeleteChannelName(std::string const & channelName);
+	std::string CTVSet::GetChannelName(int channel)const;
+	int GetChannelByName(std::string const & channelName)const;
+	bool SelectPreviousChannel();
 	typedef std::map<int, std::string> ChannelMap;
-	ChannelMap m_channelMap;
-	std::string CTVSet::ReturnChannelName()const;
-	int CTVSet::ReturnChannelNumber()const;
+	auto CTVSet::SearchMap(std::string str)const;
+	auto CTVSet::SearchMap(int num)const;
+	void CTVSet::PrintMap(std::ostream & out)const;
+	//std::string CTVSet::DeleteSpaces(std::string const & channelName);
 private:
 	bool m_isOn = false;
 	int m_selectedChannel = 1;
 	int m_prevChannel = 1;
-	int m_settedNum = 0;
 	std::string m_settedName;
+	ChannelMap m_channelMap;
 };

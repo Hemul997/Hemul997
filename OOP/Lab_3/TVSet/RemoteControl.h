@@ -21,9 +21,9 @@ private:
 	bool DeleteChannelName(std::istream & args);
 	bool GetChannelName(std::istream & args);
 	bool GetChannelByName(std::istream & args);
+	bool CRemoteControl::Help(std::istream & args);
 private:
 	typedef std::map<std::string, std::function<bool(std::istream & args)>> ActionMap;
-	
 	
 	CTVSet & m_tv;
 

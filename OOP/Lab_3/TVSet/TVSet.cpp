@@ -1,30 +1,32 @@
 #include "stdafx.h"
 #include "TVSet.h"
+#include <regex>
 
-std::string DeleteSpaces(std::string str)
+std::string DeleteSpaces(std::string const & channelName)
 {
-	std::string channelName;
-	for (size_t i = 0; i < str.size(); ++i)
+	std::string str = std::regex_replace(channelName, std::regex("[ ]+"), " ");
+	boost::trim(str);
+	if (str == " ")
 	{
-		if (str[i] != ' ')
-		{
-			channelName += str[i];
-		}
-		else
-		{
-			if (!(str[i] == ' ' && str[i + 1] == str[i]))
-			{
-				channelName += ' ';
-			}
-		}
+		str = "";
 	}
-	if (channelName == " ")
-	{
-		channelName = "";
-	}
-	return channelName;
+	return str;
 }
-
+auto CTVSet::SearchMap(int channel)const
+{
+	auto foundName = m_channelMap.find(channel);
+	return foundName;
+}
+auto CTVSet::SearchMap(std::string str)const
+{
+	auto foundNum(std::find_if(m_channelMap.begin(), m_channelMap.end(),
+		[&](auto a) {return a.second == str; }));
+	return foundNum;
+}
+bool isAvailableChannel(int channel)
+{
+	return channel >= 1 && channel <= 99;
+}
 bool CTVSet::IsTurnedOn()const
 {
 	return m_isOn;
@@ -44,11 +46,9 @@ int CTVSet::GetChannel()const
 {
 	return m_isOn ? m_selectedChannel : 0;
 }
-
 bool CTVSet::SelectChannel(int channel)
 {
-	bool isAvailableChannel = (channel >= 1) && (channel <= 99);
-	if (isAvailableChannel && m_isOn)
+	if (isAvailableChannel(channel) && m_isOn)
 	{
 		m_prevChannel = m_selectedChannel;
 		m_selectedChannel = channel;
@@ -56,25 +56,20 @@ bool CTVSet::SelectChannel(int channel)
 	}
 	return false;
 }
-int CTVSet::ReturnPreviousChannel()const
+int CTVSet::GetPreviousChannel()const
 {
 	return m_prevChannel;
 }
-
 bool CTVSet::SelectPreviousChannel()
 {
-	if (SelectChannel(ReturnPreviousChannel()) && m_isOn)
-	{
-	    return true;
-	}
-	return false;
+	return SelectChannel(GetPreviousChannel()) && m_isOn;
 }
-
-bool CTVSet::SelectChannel(const std::string channelName)
+bool CTVSet::SelectChannel(std::string const & channelName)
 {
-	if (GetChannelByName(channelName) && m_isOn)
+	int num = GetChannelByName(channelName);
+	if (num != 0 && m_isOn)
 	{
-		SelectChannel(ReturnChannelNumber());
+		SelectChannel(num);
 		return true;
 	}
 	else
@@ -82,74 +77,55 @@ bool CTVSet::SelectChannel(const std::string channelName)
 		return false;
 	}
 }
-
-bool CTVSet::GetChannelByName(std::string channelName)
+int CTVSet::GetChannelByName(std::string const & channelName)const
 {
-	boost::trim(channelName);
-	channelName = DeleteSpaces(channelName);
-	auto foundNum(std::find_if(m_channelMap.begin(), m_channelMap.end(),
-		[&](auto a) {return a.second == channelName; }));\
-	if(foundNum != m_channelMap.end() && m_isOn)
+	int num = 0;
+	std::string str = DeleteSpaces(channelName);
+	if (SearchMap(str) != m_channelMap.end())
 	{
-		m_settedNum = foundNum->first;
-		return true;
+		num = SearchMap(str)->first;
 	}
-	return false;
+	return num;
 }
-
-bool CTVSet::SetChannelName(int channel, std::string channelName)
+bool CTVSet::SetChannelName(int channel, std::string const & channelName)
 {
-	bool isAvailableChannel = (channel >= 1) && (channel <= 99);
-	boost::trim(channelName);
-	channelName = DeleteSpaces(channelName);
-	if (isAvailableChannel && m_isOn && !channelName.empty())
+	std::string str = DeleteSpaces(channelName);
+	if (isAvailableChannel(channel) && m_isOn && !str.empty())
 	{
-		DeleteChannelName(channelName);
-		auto foundName = m_channelMap.find(channel);
-		if (foundName != m_channelMap.end())
+		DeleteChannelName(str);
+		if (SearchMap(channel) != m_channelMap.end())
 		{
-			m_channelMap.erase(foundName);
+			m_channelMap.erase(SearchMap(channel));
 		}
 		auto it = m_channelMap.begin();
-		m_channelMap.insert(it, std::pair<int, std::string>(channel, channelName));
+		m_channelMap.insert(it, std::pair<int, std::string>(channel, str));
 		return true;
 	}
 	return false;
 }
-
-bool CTVSet::DeleteChannelName(std::string channelName)
+bool CTVSet::DeleteChannelName(std::string const & channelName)
 {
-	boost::trim(channelName);
-	channelName = DeleteSpaces(channelName);
-	auto foundNum(std::find_if(m_channelMap.begin(), m_channelMap.end(),
-		[&](auto a) {return a.second == channelName; }));
-	if (foundNum != m_channelMap.end() && m_isOn)
+	std::string str = DeleteSpaces(channelName);
+	if (SearchMap(str) != m_channelMap.end() && m_isOn)
 	{
-		m_channelMap.erase(foundNum);
+		m_channelMap.erase(SearchMap(str));
 		return true;
 	}
 	return false;
 }
-
-bool CTVSet::GetChannelName(int channel)
+std::string CTVSet::GetChannelName(int channel)const
 {
-	bool isAvailableChannel = (channel >= 1) && (channel <= 99);
-	if (isAvailableChannel && m_isOn)
+	std::string str;
+	if (isAvailableChannel(channel) && m_isOn && SearchMap(channel)!= m_channelMap.end())
 	{
-		auto foundName = m_channelMap.find(channel);
-		if (foundName != m_channelMap.end())
-		{
-			m_settedName = foundName->second;
-			return true;
-		}
+		str = SearchMap(channel)->second;
 	}
-	return false;
+	return str;
 }
-int CTVSet::ReturnChannelNumber()const
+void CTVSet::PrintMap(std::ostream & out)const
 {
-	return m_settedNum;
-}
-std::string CTVSet::ReturnChannelName()const
-{
-	return m_settedName;
+	for (auto it = m_channelMap.begin(); it != m_channelMap.end(); ++it)
+	{
+		out << it->first << " - " << it->second << "\n";
+	}
 }

@@ -26,7 +26,6 @@ BOOST_FIXTURE_TEST_SUITE(TVSet, TVSetFixture)
 	BOOST_AUTO_TEST_CASE(cant_set_channel_name_when_turned_off)
 	{
 		BOOST_CHECK(!tv.SetChannelName(5, "five"));
-		BOOST_CHECK_EQUAL(tv.ReturnChannelName(), "");
 	}
 	// может быть включен
 	BOOST_AUTO_TEST_CASE(can_be_turned_on)
@@ -93,8 +92,7 @@ BOOST_FIXTURE_TEST_SUITE(TVSet, TVSetFixture)
 		BOOST_AUTO_TEST_CASE(can_delete_whitespaces_in_channel_name_when_turned_on)
 		{
 			BOOST_CHECK(tv.SetChannelName(5, "   five         channel    "));
-			BOOST_CHECK(tv.GetChannelName(5));
-			BOOST_CHECK_EQUAL(tv.ReturnChannelName(), "five channel");
+			BOOST_CHECK_EQUAL(tv.GetChannelName(5), "five channel");
 		}
 		BOOST_AUTO_TEST_CASE(cant_delete_name_of_channel_without_setting_name)
 		{
@@ -138,19 +136,17 @@ BOOST_FIXTURE_TEST_SUITE(TVSet, TVSetFixture)
 	BOOST_FIXTURE_TEST_SUITE(after_setting_name, after_setting_name_)
 		BOOST_AUTO_TEST_CASE(can_get_channel_by_name)
 		{
-			BOOST_CHECK(tv.GetChannelByName("five"));
-			BOOST_CHECK_EQUAL(tv.ReturnChannelNumber(), 5);
+			BOOST_CHECK_EQUAL(tv.GetChannelByName("five"), 5);
 		}
 		BOOST_AUTO_TEST_CASE(can_get_channel_name)
 		{
-			BOOST_CHECK(tv.GetChannelName(5));
-			BOOST_CHECK_EQUAL(tv.ReturnChannelName(), "five");
+			BOOST_CHECK_EQUAL(tv.GetChannelName(5), "five");
 		}
 		BOOST_AUTO_TEST_CASE(can_delete_channel_name)
 		{
 			BOOST_CHECK(tv.DeleteChannelName("five"));
-			BOOST_CHECK(!tv.GetChannelName(5));
-			BOOST_CHECK(!tv.GetChannelByName("five"));
+			BOOST_CHECK(tv.GetChannelName(5).empty());
+			BOOST_CHECK(tv.GetChannelByName("five") == 0);
 		}
 		BOOST_AUTO_TEST_CASE(can_select_channel_by_name)
 		{
@@ -160,15 +156,13 @@ BOOST_FIXTURE_TEST_SUITE(TVSet, TVSetFixture)
 		BOOST_AUTO_TEST_CASE(cant_set_two_channels_by_one_name)
 		{
 			BOOST_CHECK(tv.SetChannelName(6, "five"));
-			BOOST_CHECK(!tv.GetChannelName(5));
-			BOOST_CHECK(tv.GetChannelByName("five"));
-			BOOST_CHECK_EQUAL(tv.ReturnChannelNumber(), 6);
+			BOOST_CHECK(tv.GetChannelName(5).empty());
+			BOOST_CHECK_EQUAL(tv.GetChannelByName("five"), 6);
 		}
 		BOOST_AUTO_TEST_CASE(can_rename_channel)
 		{
 			BOOST_CHECK(tv.SetChannelName(5, "five channel"));
-			BOOST_CHECK(tv.GetChannelByName("five channel"));
-			BOOST_CHECK_EQUAL(tv.ReturnChannelNumber(), 5);
+			BOOST_CHECK_EQUAL(tv.GetChannelByName("five channel"), 5);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
