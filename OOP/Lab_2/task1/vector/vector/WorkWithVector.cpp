@@ -29,7 +29,7 @@ void SortVector(vector<double> & numbers)
 	sort(numbers.begin(), numbers.end());
 }
 
-void WorkWithVector(vector<double> & numbers)
+void ProcessVector(vector<double> & numbers)
 {
 	if (!numbers.empty())
 	{

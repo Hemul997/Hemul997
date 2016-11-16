@@ -15,6 +15,7 @@
 #include <sstream>
 #include <functional>
 #include <map>
-
-
+#include <algorithm>
+#include <iterator>
+#include <boost/algorithm/string/trim.hpp>
 // TODO: reference additional headers your program requires here

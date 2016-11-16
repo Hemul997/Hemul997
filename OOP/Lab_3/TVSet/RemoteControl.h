@@ -1,7 +1,5 @@
 #pragma once
 #include <boost/noncopyable.hpp>
-#include <iterator> 
-#include <sstream>
 
 class CTVSet;
 
@@ -18,11 +16,17 @@ private:
 	bool TurnOff(std::istream & args);
 	bool Info(std::istream & args);
 	bool SelectChannel(std::istream & args);
-	bool SelectPreviousChannel(std::istream & /*args*/);
+	bool SelectPreviousChannel(std::istream & args);
+	bool SetChannelName(std::istream & args);
+	bool DeleteChannelName(std::istream & args);
+	bool GetChannelName(std::istream & args);
+	bool GetChannelByName(std::istream & args);
 private:
 	typedef std::map<std::string, std::function<bool(std::istream & args)>> ActionMap;
-
+	
+	
 	CTVSet & m_tv;
+
 	std::istream & m_input;
 	std::ostream & m_output;
 

@@ -1,0 +1,59 @@
+﻿  stdafx.cpp
+  TvSetTests.cpp
+  Task1Tests.cpp
+  RemoteControlTests.cpp
+  TVSet.cpp
+  RemoteControl.cpp
+  Generating Code...
+  Task1Tests.vcxproj -> C:\Users\User\Documents\Hemul997\OOP\Lab_3\Debug\Task1Tests.exe
+  Task1Tests.vcxproj -> C:\Users\User\Documents\Hemul997\OOP\Lab_3\Debug\Task1Tests.pdb (Full PDB)
+  Running 41 test cases...
+    All tests
+      Remote Control
+        can handle TurnOn command
+        can turn off tv which is on
+        can print tv info
+        can select a valid channel when tv which is on
+        cant select channel when tv is turned off
+        cant select an invalid channel when tv is on
+        can select previous channel when tv is on
+        cant select previous channel when tv is off
+        can save previous channel when tv is turned off
+        can set channel name
+        can print list of name in info
+        can select channel by name
+        can get channel name by number
+        can get channel by name
+        can print tv info after setting name
+        can change old name of channel to the new
+        can delete name of channel after setting name
+        cant delete name of channel without setting name
+        can select channel by empty name without setting empty name
+      TVSet
+        is turned off by default
+        cant select channel when turned off
+        cant set channel name when turned off
+        can be turned on
+        displays channel 0 by default
+        when turned on
+          displays channel one
+          can be turned off
+          can select channel from 1 to 99
+          cant select empty channel name without setting name
+          can set channel name when turned on
+          cant set channel empty name when turned on
+          cant set channel name with only spaces when turned on
+          can delete whitespaces in channel name when turned on
+          cant delete name of channel without setting name
+        after subsequent turning on
+          restores last selected channel
+          restores previous selected channel
+        after setting name
+          can get channel by name
+          can get channel name
+          can delete channel name
+          can select channel by name
+          cant set two channels by one name
+          can rename channel
+  
+  *** No errors detected
