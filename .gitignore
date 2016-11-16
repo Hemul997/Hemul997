@@ -3,3 +3,9 @@
 *.ipch
 *.tlog
 *.obj
+*.log
+*.suo
+*.idb
+*.pdb
+*.lik
+*.filters
