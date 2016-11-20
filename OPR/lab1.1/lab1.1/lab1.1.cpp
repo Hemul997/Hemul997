@@ -3,60 +3,66 @@
 
 #include "stdafx.h"
 
+float CalculateTimeOfMaxHeight(const float &G, int heightOfJump);
+void ProcessingOfJump(const float &G, const float &MULTIPLIER, float timeOfMaxHeight);
+void CalculateHeight(const float &G, const float &MULTIPLIER, float &v0, float time);
+void CalcutateLanding(const float &G, const float &MULTIPLIER, float &v0, float &timeOfMaxHeight);
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cmath>
 
-// This program takes max jump height from input and prints
-// jump height for every time point with step 0.1 seconds.
-// Program should print all time points when height is min and max.
-//
-// TODO: Fix all warnings on high warning level (/W4, -Wall -Wextra).
-// TODO: Rename variables and split to several functions,
-// see also https://ps-group.github.io/sfml/coding_conventions.html
-// TODO: fix negative height values, fix heigh values higher than max height.
 int main(int, char *[])
 {
-	const float g = 9.8f;
+	const float G = 9.8f;
 	const float MULTIPLIER = 0.5;
-	float timeOfMaxHeight;
-	int heightOfMaxJump;
+	//float timeOfMaxHeight;
+	
+	int heightOfJump;
 
 	printf("Height of max jump: ");
-	if (0 == scanf("%d", &heightOfMaxJump))
+	if (0 == scanf("%d", &heightOfJump))
 	{
 		printf("\n" "expected floating-point number" "\n");
 		exit(1);
 	}
-	// T - time point when height is at maximum.
-	// t - current time point
-	// v(t) == v0 - g * t
-	// v0 = g * T
-	// s(t) == v0 * t - 0.5 * g * t * t
-	timeOfMaxHeight = sqrt(heightOfMaxJump * 2 / g);
+	if (heightOfJump < 0 || heightOfJump > INT_MAX)
+	{
+		printf("\n" "expected invalid number" "\n");
+		exit(1);
+	}
+	
+	ProcessingOfJump(G, MULTIPLIER, CalculateTimeOfMaxHeight(G, heightOfJump));
+	
+	return 0;
+}
+float CalculateTimeOfMaxHeight(const float &G, int heightOfJump)
+{
+	float timeOfMaxHeight;
+	timeOfMaxHeight = sqrt(heightOfJump * 2 / G);
 	printf("Time of max height=%f\n", timeOfMaxHeight);
+	return timeOfMaxHeight;
+}
+void ProcessingOfJump(const float &G, const float &MULTIPLIER, float timeOfMaxHeight)
+{
+	float v0 = G * timeOfMaxHeight;
 	bool flag = false;
+
 	for (float currentTime = 0; currentTime < timeOfMaxHeight * 2; currentTime += 0.1f)
 	{
 		if (currentTime > timeOfMaxHeight && !flag)
 		{
 			flag = true;
-			float V0 = g * timeOfMaxHeight;
-			float currentHeight = V0 * timeOfMaxHeight - MULTIPLIER * g * timeOfMaxHeight * timeOfMaxHeight;
-			printf("Time of max height=%f, current height=%f\n", timeOfMaxHeight, currentHeight);
+			CalculateHeight(G, MULTIPLIER, v0, timeOfMaxHeight);
 		}
-		float V0 = g * timeOfMaxHeight;
-		float currentHeight = V0 * currentTime - MULTIPLIER * g * currentTime * currentTime;
-		printf("Current time=%f, Current height=%f\n", currentTime, currentHeight);
+		CalculateHeight(G, MULTIPLIER, v0, currentTime);
 	}
-
-	float V0 = g * timeOfMaxHeight;
-	float currentHeight = V0 * (timeOfMaxHeight * 2) - MULTIPLIER * g * (timeOfMaxHeight * 2) * (timeOfMaxHeight * 2);
-	printf("Current time=%f, Current height=%f\n", timeOfMaxHeight * 2, currentHeight);
-
-
-	return 0;
+	CalcutateLanding(G, MULTIPLIER, v0, timeOfMaxHeight);
 }
-
+void CalculateHeight(const float &G, const float &MULTIPLIER, float &v0, float time)
+{
+	float currentHeight = v0 * time - MULTIPLIER * G * time * time;
+	printf("Time = %f, height = %f\n", time, currentHeight);
+}
+void CalcutateLanding(const float &G, const float &MULTIPLIER, float &v0, float &timeOfMaxHeight)
+{
+	float currentHeight = v0 * (timeOfMaxHeight * 2) - MULTIPLIER * G * (timeOfMaxHeight * 2) * (timeOfMaxHeight * 2);
+	printf("Time = %f, height = %f\n", timeOfMaxHeight * 2, currentHeight);
+}
