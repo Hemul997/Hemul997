@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E34AD627-9239-4F70-B5C9-F0D629B53E55}</ProjectGuid>
+    <ProjectGuid>{D04B160A-55F3-4C78-A490-592102143AB9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>HeightOfJump</RootNamespace>
+    <RootNamespace>lab11</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -153,7 +153,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HeightOfJump.cpp" />
+    <ClCompile Include="lab1.1.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

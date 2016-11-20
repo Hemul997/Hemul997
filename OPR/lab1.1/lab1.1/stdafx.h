@@ -2,6 +2,7 @@
 // or project specific include files that are used frequently, but
 // are changed infrequently
 //
+#define _CRT_SECURE_NO_WARNINGS
 
 #pragma once
 
@@ -9,8 +10,6 @@
 
 #include <stdio.h>
 #include <tchar.h>
-
-#define _CRT_SECURE_NO_WARNINGS
 
 
 

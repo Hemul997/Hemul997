@@ -1,9 +1,3 @@
-// HeightOfJump.cpp : Defines the entry point for the console application.
-//
-
-#include "stdafx.h"
-
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -61,4 +55,3 @@ int main(int, char *[])
 
 	return 0;
 }
-
