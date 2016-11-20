@@ -1,3 +1,9 @@
+// HeightOfJump.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,12 +20,12 @@
 int main(int, char *[])
 {
 	const float g = 9.8f;
-	float T;
-	float Vn;
-	int S;
-	int M;
-	printf("S: ");
-	if (0 == scanf("%d", &S))
+	const float MULTIPLIER = 0.5;
+	float timeOfMaxHeight;
+	int heightOfMaxJump;
+
+	printf("Height of max jump: ");
+	if (0 == scanf("%d", &heightOfMaxJump))
 	{
 		printf("\n" "expected floating-point number" "\n");
 		exit(1);
@@ -29,29 +35,28 @@ int main(int, char *[])
 	// v(t) == v0 - g * t
 	// v0 = g * T
 	// s(t) == v0 * t - 0.5 * g * t * t
-	T = sqrt(S * 2 / g);
-	printf("T=%f\n", T);
+	timeOfMaxHeight = sqrt(heightOfMaxJump * 2 / g);
+	printf("Time of max height=%f\n", timeOfMaxHeight);
 	bool flag = false;
-	for (float t = 0; t < T * 2; t += 0.1f)
+	for (float currentTime = 0; currentTime < timeOfMaxHeight * 2; currentTime += 0.1f)
 	{
-		if (t > T && !flag)
+		if (currentTime > timeOfMaxHeight && !flag)
 		{
 			flag = true;
-			float V0 = g * T;
-			float s = V0 * T - 0.5 * g * T * T;
-			printf("t=%f, s=%f\n", T, s);
+			float V0 = g * timeOfMaxHeight;
+			float currentHeight = V0 * timeOfMaxHeight - MULTIPLIER * g * timeOfMaxHeight * timeOfMaxHeight;
+			printf("Time of max height=%f, current height=%f\n", timeOfMaxHeight, currentHeight);
 		}
-		float V0 = g * T;
-		float s = V0 * t - 0.5 * g * t * t;
-		printf("t=%f, s=%f\n", t, s);
+		float V0 = g * timeOfMaxHeight;
+		float currentHeight = V0 * currentTime - MULTIPLIER * g * currentTime * currentTime;
+		printf("Current time=%f, Current height=%f\n", currentTime, currentHeight);
 	}
 
-	float V0 = g * T;
-	float s = V0 * (T * 2) - 0.5 * g * (T * 2) * (T * 2);
-	printf("t=%f, s=%f\n", T * 2, s);
+	float V0 = g * timeOfMaxHeight;
+	float currentHeight = V0 * (timeOfMaxHeight * 2) - MULTIPLIER * g * (timeOfMaxHeight * 2) * (timeOfMaxHeight * 2);
+	printf("Current time=%f, Current height=%f\n", timeOfMaxHeight * 2, currentHeight);
 
-	// TODO: remove system("pause") and never use it again.
-	system("pause");
 
 	return 0;
 }
+
