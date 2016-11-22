@@ -5,13 +5,13 @@
 
 using boost::transform;
 
-void LowerCase(string & line)
+void LowerCase(wstring & line)
 {
 	boost::algorithm::to_lower(line);
 }
-void CountWord(istream & args, CountWordsMap & countWords)
+void CountWord(wistream & args, CountWordsMap & countWords)
 {
-	string line;
+	wstring line;
 	while(args >> line)
 	{
 		LowerCase(line);
@@ -22,7 +22,7 @@ void PrintMap(CountWordsMap const & store)
 {
 	for (auto i = store.begin(); i != store.end(); ++i)
 	{
-		cout << i->first << "->" << i->second << endl;
+		wcout << i->first << "->" << i->second << endl;
 	}
 }
 

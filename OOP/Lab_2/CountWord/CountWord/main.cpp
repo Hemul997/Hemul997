@@ -2,12 +2,17 @@
 #include "CountWord.h"
 
 
+
+
 int main()
 {
-	map<string, int> countWords;
-	while (!cin.eof())
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "");
+	map<wstring, int> countWords;
+	while (!wcin.eof())
 	{
-		CountWord(cin, countWords);
+		CountWord(wcin, countWords);
 	}
 	PrintMap(countWords);
 	return 0;
