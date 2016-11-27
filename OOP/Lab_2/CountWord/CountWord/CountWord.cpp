@@ -15,7 +15,7 @@ void CountWord(wistream & args, CountWordsMap & countWords)
 	while(args >> line)
 	{
 		LowerCase(line);
-		countWords[line]++;
+		++countWords[line];
 	}
 }
 void PrintMap(CountWordsMap const & store)

@@ -5,9 +5,11 @@ int main()
 	set<int> firstSet, secondSet, resultSet;
 	int num;
 	cout << "Enter the number\n";
-	cin >> num;
-	/*firstSet = InsertToFirstSet(num);
-	secondSet = InsertToSecondSet(num);*/
+	if (!(cin >> num))
+	{
+		cout << "incorrect input";
+		return 1;
+	}
 	InsertToSets(firstSet, secondSet, num);
 	resultSet = CrossSet(firstSet, secondSet);
 	PrintSet(firstSet);

@@ -21,11 +21,9 @@ public:
 	auto CTVSet::SearchMap(std::string str)const;
 	auto CTVSet::SearchMap(int num)const;
 	void CTVSet::PrintMap(std::ostream & out)const;
-	//std::string CTVSet::DeleteSpaces(std::string const & channelName);
 private:
 	bool m_isOn = false;
 	int m_selectedChannel = 1;
 	int m_prevChannel = 1;
-	std::string m_settedName;
 	ChannelMap m_channelMap;
 };
