@@ -5,12 +5,16 @@
 #include "StringList.h"
 using namespace std;
 
-bool ReadStream(istream &args, string &line)
+bool ReadStream(istream &args, string &line, string & secline)
 {
 	if (!args.eof())
 	{
 		getline(args, line);
-		return true;
+		if (!args.eof())
+		{
+			getline(args, secline);
+			return true;
+		}
 	}
 	return false;
 }
@@ -18,7 +22,8 @@ bool ReadStream(istream &args, string &line)
 int main()
 {
 	StringList mylist;
-	string discipline;
+	string firstDisciplline;
+	string secondDiscipline;
 	/*mylist.AddFirst("Arifm");
 	mylist.AddLast("Math");
 	mylist.AddLast("Geom");
@@ -30,17 +35,39 @@ int main()
 	cout << mylist.GetAllItemsInfo();
 	cout << mylist.Head();*/
 
-	getline(cin, discipline);
-	mylist.AddFirst(discipline);
-	cout << mylist.GetAllItemsInfo();
-	while (ReadStream(cin, discipline))
+	ReadStream(cin, firstDisciplline, secondDiscipline);
+	mylist.AddFirst(firstDisciplline);
+	if (!mylist.FindInList(secondDiscipline))
 	{
-		if (!mylist.FindInList(discipline))
-		{
-			mylist.AddLast(discipline);
-		}
+		mylist.AddLast(secondDiscipline);
 	}
 	cout << mylist.GetAllItemsInfo();
+	while (ReadStream(cin, firstDisciplline, secondDiscipline))
+	{
+		if (!mylist.FindInList(firstDisciplline))
+		{
+			mylist.AddLast(firstDisciplline);
+		}
+		if (!mylist.FindInList(secondDiscipline))
+		{
+			mylist.AddLast(secondDiscipline);
+		}
+		if (mylist.FindInList(firstDisciplline) && mylist.FindInList(secondDiscipline))
+		{
+			if (secondDiscipline == mylist.Head())
+			{
+				cout << "Cikl!!!!\n";
+				mylist.AddLast(secondDiscipline);
+				cout << mylist.GetAllItemsInfo();
+				return 1;
+			}
+
+			mylist.Remove(firstDisciplline);
+			mylist.Insert(firstDisciplline, secondDiscipline);
+			cout << mylist.GetAllItemsInfo();
+		}
+	}
+	//cout << mylist.GetAllItemsInfo();
     return 0;
 }
 

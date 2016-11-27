@@ -91,11 +91,11 @@ bool StringList::Remove(std::string str)
 	return false;
 }
 
-void StringList::Insert(std::string str)
+void StringList::Insert(std::string const & str, std::string const & tofound)
 {
 	ListItem *prev = NULL,
 		*succ = first;
-	while (succ != NULL && succ->item < str)
+	while (succ != NULL && succ->item != tofound /*FindInList(str*/)
 	{
 		prev = succ;
 		succ = succ->next;

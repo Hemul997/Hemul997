@@ -50,8 +50,10 @@ public:
 	void AddFirst(std::string const & str);
 	void AddLast(std::string const & str);
 	std::string RemoveFirst();//Метод для удаления первого элемента в списке
-	bool Remove(std::string str);//Метод для удаления из связного списка элемент с указанным значением
-	void Insert(std::string str);//Добавление элемента со значением списка
+	bool Remove(std::string str);
+	void Insert(std::string const & str, std::string const & tofound);
+	//Метод для удаления из связного списка элемент с указанным значением
+	//void Insert(std::string str);//Добавление элемента со значением списка
 	std::string GetAllItemsInfo();
 	bool FindInList(std::string const & str);
 };
