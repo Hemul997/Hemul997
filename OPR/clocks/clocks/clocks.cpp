@@ -66,12 +66,12 @@ void GetSystemTime(Clocks & clock);
 void CreateHands(Vector2f & windowCenter, Clocks & clock);
 void HandleEvents(RenderWindow & window, Clocks & clock);
 
+Vector2f GetRectCenter(IntRect & brandTextureRect);
 
-
-bool IsLoadedImage(Clocks &clock);
-bool IsLoadedBrand(Clocks &clock);
-bool IsLoadFont(Clocks & clock);
-bool IsLoadedMusic(Clocks &clock);
+bool LoadClockImage(Clocks &clock);
+bool LoadBrandImage(Clocks &clock);
+bool LoadFont(Clocks & clock);
+bool LoadMusic(Clocks &clock);
 
 ////////////////////////////////////////////////////////////
 /// Entry point of application
@@ -91,9 +91,9 @@ int main()
 	RenderWindow window(VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "SFML Analog Clock", Style::Close, settings);
 
 	// Define windowCenter which gets the center of the window here, right after creating window
-	Vector2f windowCenter = Vector2f(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
+	Vector2f windowCenter(Vector2f(window.getSize().x / 2.0f, window.getSize().y / 2.0f));
 
-	if (IsLoadedImage(clock) && IsLoadedBrand(clock) && IsLoadedMusic(clock) && IsLoadFont(clock))
+	if (LoadClockImage(clock) && LoadBrandImage(clock) && LoadMusic(clock) && LoadFont(clock))
 	{
 		CreateOutline(window, clock);
 		CreateCenterCircle(windowCenter, clock);
@@ -185,7 +185,8 @@ void CreateOutline(RenderWindow & window, Clocks & clock)
 	clock.clockOutline.setPointCount(CIRCLE_POINT_COUNTS);
 	clock.clockOutline.setOutlineThickness(CLOCK_CIRCLE_THICKNESS);
 	clock.clockOutline.setOutlineColor(Color::Black);
-	clock.clockOutline.setOrigin(clock.clockOutline.getGlobalBounds().width / 2, clock.clockOutline.getGlobalBounds().height / 2);
+	auto circleGlobalBounds = clock.clockOutline.getGlobalBounds();
+	clock.clockOutline.setOrigin(circleGlobalBounds.width / 2, circleGlobalBounds.height / 2);
 	clock.clockOutline.setPosition(window.getSize().x / 2 + CLOCK_CIRCLE_THICKNESS, window.getSize().y / 2 + CLOCK_CIRCLE_THICKNESS);
 }
 
@@ -195,28 +196,35 @@ void CreateCenterCircle(Vector2f & windowCenter, Clocks & clock)
 	clock.centerCircle.setRadius(CENTER_CIRCLE_RADIUS);
 	clock.centerCircle.setPointCount(CIRCLE_POINT_COUNTS);
 	clock.centerCircle.setFillColor(Color::Red);
-	clock.centerCircle.setOrigin(clock.centerCircle.getGlobalBounds().width / 2, clock.centerCircle.getGlobalBounds().height / 2);
+	auto circleGlobalBounds = clock.centerCircle.getGlobalBounds();
+	clock.centerCircle.setOrigin(circleGlobalBounds.width / 2, circleGlobalBounds.height / 2);
 	clock.centerCircle.setPosition(windowCenter);
 }
 void CreateTextures(RenderWindow & window, Clocks & clock)
 {
 	clock.clockOutline.setTexture(&clock.clockImage);
 	clock.clockOutline.setTextureRect(IntRect(40, 0, 500, 500));
-	clock.clockBrandSprite.setTexture(clock.clockBrand);
-	clock.clockBrandSprite.setOrigin(clock.clockBrandSprite.getTextureRect().left + clock.clockBrandSprite.getTextureRect().width / 2.0f,
-		clock.clockBrandSprite.getTextureRect().top + clock.clockBrandSprite.getTextureRect().height / 2.0f);
-	clock.clockBrandSprite.setPosition(window.getSize().x / 2, window.getSize().y - 150);
-}
 
-bool IsLoadedImage(Clocks &clock)
+	Sprite &brandSprite = clock.clockBrandSprite;
+	IntRect brandTextureRect = brandSprite.getTextureRect();
+	brandSprite.setTexture(clock.clockBrand);
+	brandSprite.setOrigin(GetRectCenter(brandTextureRect));
+	brandSprite.setPosition(window.getSize().x / 2, window.getSize().y - 150);
+}
+Vector2f GetRectCenter(IntRect & brandTextureRect)
+{
+	return Vector2f(brandTextureRect.left + brandTextureRect.width / 2.0f,
+		brandTextureRect.top + brandTextureRect.height / 2.0f);
+}
+bool LoadClockImage(Clocks &clock)
 {
 	return clock.clockImage.loadFromFile("resources/clock-image.png");
 }
-bool IsLoadedBrand(Clocks & clock)
+bool LoadBrandImage(Clocks & clock)
 {
 	return clock.clockBrand.loadFromFile("resources/clock-brand.png");
 }
-bool IsLoadedMusic(Clocks & clock)
+bool LoadMusic(Clocks & clock)
 {
 	return clock.clockTick.openFromFile("resources/clockSound.wav");
 }
@@ -264,7 +272,7 @@ void CreateMusic(Clocks & clock)
 	clock.clockTick.setLoop(true);
 	clock.clockTick.play();
 }
-bool IsLoadFont(Clocks & clock)
+bool LoadFont(Clocks & clock)
 {
 	return (clock.font.loadFromFile("resources/arial.ttf"));
 }
