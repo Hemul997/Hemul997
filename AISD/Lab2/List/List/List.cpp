@@ -1,73 +1,116 @@
 // List.cpp : Defines the entry point for the console application.
 //
-
+//Учебный план включает перечень дисциплин.Задан список
+//пар   дисциплин.Отдельная   пара   показывает, что  вторая
+//дисциплина должна изучаться  после  первой.Составить  список
+//дисциплин учебного плана в порядке их изучения.В том случае,
+//когда задание некорректно, т.е.в списке пар имеются  циклы,
+//выдать хотя бы один из них(10).
 #include "stdafx.h"
 #include "StringList.h"
 using namespace std;
 
-bool ReadStream(istream &args, string &line, string & secline)
+bool ReadStream(istream &args, string &firstLine, string &secondLine)
 {
 	if (!args.eof())
 	{
-		getline(args, line);
+		args >> firstLine;
 		if (!args.eof())
 		{
-			getline(args, secline);
+			args >> secondLine;
 			return true;
 		}
 	}
 	return false;
 }
+void ProccessDisciplines(StringList & firstList, StringList & secondList , StringList & tempList, StringList & outList, string & firstDiscipline, string & secondDiscipline)
+{
+	cout << firstDiscipline << " " << secondDiscipline << "disp\n";
+	if (firstList.FindInList(firstDiscipline) && !secondList.FindInList(firstDiscipline) && !outList.FindInList(firstDiscipline))
+	{
+		outList.AddLast(firstDiscipline);
+		if (firstList.IsFirst(firstDiscipline) && secondList.IsFirst(secondDiscipline))
+		{
+			firstList.RemoveFirst();
+			secondList.RemoveFirst();
+			tempList.AddLast(secondDiscipline);
+		}
+		else
+		{
+			firstList.Remove(firstDiscipline);
+			secondList.Remove(secondDiscipline);
+			tempList.AddLast(secondDiscipline);
+		}
+		cout << "1:\n";
+	}
+	else
+	{
+		if (outList.FindInList(firstDiscipline))
+		{
+			if (firstList.IsFirst(firstDiscipline) && secondList.IsFirst(secondDiscipline))
+			{
 
+				firstList.RemoveFirst();
+				tempList.AddLast(secondDiscipline);
+				secondList.RemoveFirst();
+
+			}
+			else
+			{
+				firstList.Remove(firstDiscipline);
+				tempList.AddLast(secondDiscipline);
+				secondList.Remove(secondDiscipline);
+
+			}
+		}
+		cout << "2:\n";
+	}
+
+}
 int main()
 {
-	StringList mylist;
-	string firstDisciplline;
+	StringList firstList;
+	StringList secondList;
+	StringList tempList;
+	StringList outList;
+	string firstDiscipline;
 	string secondDiscipline;
-	/*mylist.AddFirst("Arifm");
-	mylist.AddLast("Math");
-	mylist.AddLast("Geom");
-	
-	cout << mylist.GetAllItemsInfo();
-	//mylist.Remove("Math");
-	//cout << mylist.GetAllItemsInfo();
-	mylist.RemoveFirst();
-	cout << mylist.GetAllItemsInfo();
-	cout << mylist.Head();*/
-
-	ReadStream(cin, firstDisciplline, secondDiscipline);
-	mylist.AddFirst(firstDisciplline);
-	if (!mylist.FindInList(secondDiscipline))
+	bool findFirstSucc = false;
+	ifstream inputFile1("disciplines.txt");
+	bool firstListSuccProc = false;
+	if (inputFile1.is_open() && !inputFile1.eof())
 	{
-		mylist.AddLast(secondDiscipline);
-	}
-	cout << mylist.GetAllItemsInfo();
-	while (ReadStream(cin, firstDisciplline, secondDiscipline))
-	{
-		if (!mylist.FindInList(firstDisciplline))
+		while (ReadStream(inputFile1, firstDiscipline, secondDiscipline))
 		{
-			mylist.AddLast(firstDisciplline);
-		}
-		if (!mylist.FindInList(secondDiscipline))
-		{
-			mylist.AddLast(secondDiscipline);
-		}
-		if (mylist.FindInList(firstDisciplline) && mylist.FindInList(secondDiscipline))
-		{
-			if (secondDiscipline == mylist.Head())
-			{
-				cout << "Cikl!!!!\n";
-				mylist.AddLast(secondDiscipline);
-				cout << mylist.GetAllItemsInfo();
-				return 1;
-			}
-
-			mylist.Remove(firstDisciplline);
-			mylist.Insert(firstDisciplline, secondDiscipline);
-			cout << mylist.GetAllItemsInfo();
+			firstList.AddLast(firstDiscipline);
+			secondList.AddLast(secondDiscipline);
 		}
 	}
-	//cout << mylist.GetAllItemsInfo();
-    return 0;
+	else
+	{
+		cout << "Failed to open disciplines.txt for reading\n" << endl;
+		return EXIT_FAILURE;
+	}
+	inputFile1.clear();
+	inputFile1.seekg(0, ios::beg);
+	cout << firstList.GetAllItemsInfo();
+	cout << secondList.GetAllItemsInfo();
+	if (inputFile1.is_open() && !inputFile1.eof())
+	{
+		string firstDiscipline;
+		string secondDiscipline;
+		while (ReadStream(inputFile1, firstDiscipline, secondDiscipline))
+		{
+			ProccessDisciplines(firstList, secondList, tempList, outList, firstDiscipline, secondDiscipline);
+		}
+		
+	}
+	cout << "F: " << firstList.GetAllItemsInfo();
+	cout << "S: " << secondList.GetAllItemsInfo();
+	cout << "T: " << tempList.GetAllItemsInfo();
+	cout << "O: "<<outList.GetAllItemsInfo();
+	//cout << secondList.GetAllItemsInfo();
+
+	return 0;
 }
 
