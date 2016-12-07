@@ -23,12 +23,17 @@ StringList::~StringList()
 		delete current;
 	}
 }
-
+void StringList::ReturnLastPrev()
+{
+	std::string str;
+	ListItem *cur = last->prev;
+	std::cout << cur->item;
+}
 void StringList::AddLast(const StringList & src)
 {
 	for (ListItem *cur = src.first; cur != NULL; cur = cur->next)
 	{
-		AddLast(cur->item);
+		AddToList(cur->item);
 	}
 }
 
@@ -42,12 +47,13 @@ void StringList::AddFirst(std::string const & str)
 	first = newItem;
 }
 
-void StringList::AddLast(std::string const & str)
+void StringList::AddToList(std::string const & str)
 {
-	ListItem *newItem = new ListItem(str/*, NULL*/);
+	ListItem *newItem = new ListItem(str, NULL);
 	if (!last/* = NULL*/)
 	{
 		first = newItem;
+		first->prev = NULL;
 	}
 	else
 	{
@@ -56,11 +62,9 @@ void StringList::AddLast(std::string const & str)
 	last = newItem;
 }
 
-/*std::string*/ void StringList::RemoveFirst()
+void StringList::RemoveFirst()
 {
-	//std::string result = first->item;
 	first = first->next;
-	//return result;
 }
 
 bool StringList::Remove(std::string str)
@@ -90,11 +94,16 @@ bool StringList::Remove(std::string str)
 		{
 			prev = current;
 			current = current->next;
+
 		}
 	}
 	return false;
 }
-
+void StringList::RemoveSecond()
+{
+	ListItem *prev = 0, *current = first->next;
+	delete current;
+}
 void StringList::Insert(std::string const & str, std::string const & tofound)
 {
 	ListItem *prev = NULL,
@@ -134,17 +143,16 @@ std::string StringList::GetAllItemsInfo()
 }
 bool StringList::FindInList(std::string const & str)
 {
-	ListItem *current = first;
-	while(current != NULL)
+	for (ListItem *current = first; current != NULL; current = current->next)
 	{
 		if (current->item == str)
 		{
 			return true;
 		}
-		current = current->next;
 	}
 	return false;
 }
+
 bool StringList::GoToNext(std::string & str)
 {
 	ListItem *current = first->next;
@@ -155,27 +163,9 @@ bool StringList::GoToNext(std::string & str)
 	}
 	return false;
 }
-bool StringList::FindTwoInList(std::string const & str, std::string const &sec)
-{
-	ListItem *current = first;
-	bool FindFirst = false;	
-	while (current != NULL)
-	{
-		if (current->item == str)
-		{
-			FindFirst = true;
-		}
-		if (FindFirst && current->item == sec)
-		{
-			return true;
-		}
-		current = current->next;
-	}
-	return false;
-}
 bool StringList::EmptyList()
 {
-	if (first == NULL && last == NULL)
+	if (first==NULL)
 	{
 		return true;
 	}
@@ -183,38 +173,63 @@ bool StringList::EmptyList()
 }
 bool StringList::IsFirst(std::string & str)
 {
-	ListItem *prev = 0,
-		*current = first;
-	while(current != NULL)
+	for(ListItem *prev = 0, *current = first; current != NULL; current = current->next)
 	{
 		if (prev == 0 && current->item == str && first->item == str)
 		{
 			return true;
 		}
-		current = current->next;
 	}
 	return false;
 }
-//std::string StringList::ReturnNextElem()
-//{
-//	ListItem *current = first;
-//	if(current != NULL)
-//	{
-//		current = current->next;
-//		//return current->item;
-//	}
-//	return current->item;
-//}
-//std::string StringList::ReturnNextElem(std::string &str)
-//{
-//	ListItem *current = first;
-//	while (current != NULL && current->item == str)
-//	{
-//		current = current->next;
-//		if (current->item == str)
-//		{
-//			current = current->next;
-//			return current->item;
-//		}
-//	}
-//}
+bool StringList::IsEnd(std::string & str)
+{
+	for (ListItem *current = first; current != NULL; current = current->next)
+	{
+		if (current->item == str && current == NULL)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool StringList::RemoveFromLast(std::string str)
+{
+	ListItem *prev = 0,*current = last;
+	while (current != NULL)
+	{
+		if (current->item == str)
+		{
+			if (prev)
+			{
+				prev->prev = current->prev;
+			}
+			if (prev == 0)
+			{
+				current = current->prev;
+			}
+			if (current == first)
+			{
+				first = prev;
+			}
+			if (current == last)
+			{
+				last = last->prev;
+				return true;
+			}
+			delete current;
+			return true;
+		}
+		else
+		{
+			prev = current;
+			current = current->prev;
+
+		}
+	}
+	return false;
+}
+void StringList::RemoveLast()
+{
+	last = last->prev;
+}
