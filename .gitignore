@@ -11,7 +11,7 @@
 *.filters
 *.opendb
 *.txt
-*.lik
+*.ilk
 *.pc
 *.vcxproj
 *.pch
