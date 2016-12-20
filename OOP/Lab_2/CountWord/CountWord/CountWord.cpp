@@ -2,6 +2,7 @@
 //
 #include "stdafx.h"
 #include "CountWord.h"
+#include <cmath>
 
 using boost::transform;
 
@@ -16,6 +17,39 @@ void CountWord(wistream & args, CountWordsMap & countWords)
 	{
 		LowerCase(line);
 		++countWords[line];
+	}
+}
+void CountNumbers(istream & args, CountNumbersMap & countWords)
+{
+	int line;
+	while (args >> line)
+	{
+		++countWords[line];
+	}
+}
+float CountMap(CountNumbersMap const &store)
+{
+	float count = 0;
+	for (auto i = store.begin(); i != store.end(); ++i)
+	{
+		count += (i->first * i->second);
+	}
+	return count;
+}
+double Disp(CountNumbersMap const &store, float count)
+{
+	double disp = 0;
+	for (auto i = store.begin(); i != store.end(); ++i)
+	{
+		disp += pow((i->first - count),2) * i->second;
+	}
+	return disp;
+}
+void PrintMap(CountNumbersMap const &store)
+{
+	for (auto i = store.begin(); i != store.end(); ++i)
+	{
+		cout << i->first << "->" << i->second << endl;
 	}
 }
 void PrintMap(CountWordsMap const & store)
