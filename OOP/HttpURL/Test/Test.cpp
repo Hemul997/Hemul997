@@ -9,7 +9,8 @@
 template <typename Ex, typename Fn>
 void ExpectException(Fn && fn, std::string const& expectedDescription)
 {
-    BOOST_CHECK_EXCEPTION(fn(), Ex, [&](const Ex& e) {
+    BOOST_CHECK_EXCEPTION(fn(), Ex, [&](const Ex& e) 
+	{
         return e.what() == expectedDescription;
     });
 }
@@ -35,16 +36,16 @@ BOOST_AUTO_TEST_SUITE(CHttpURL)
         BOOST_AUTO_TEST_CASE(can_parse_url)
         {
             {
-                std::string url = "https://mysite.com/page.php?id=100";
-                VerifyUrl(CHttpUrl(url), url, Protocol::HTTPS, "mysite.com", "/page.php?id=100", 443);
+                std::string url = "https://site.com/page.php?id=100";
+                VerifyUrl(CHttpUrl(url), url, Protocol::HTTPS, "site.com", "/page.php?id=100", 443);
             }
 
             {
-                VerifyUrl(CHttpUrl("vk.com", "/id132524"), "http://vk.com/id132524", Protocol::HTTP, "vk.com", "/id132524", 80);
+                VerifyUrl(CHttpUrl("vk.com", "/id999504"), "http://vk.com/id999504", Protocol::HTTP, "vk.com", "/id999504", 80);
             }
 
             {
-                VerifyUrl(CHttpUrl("vk.com", "/id132524", Protocol::HTTPS, 2425), "https://vk.com:2425/id132524", Protocol::HTTPS, "vk.com", "/id132524", 2425);
+                VerifyUrl(CHttpUrl("vk.com", "/id999504", Protocol::HTTPS, 2425), "https://vk.com:2425/id999504", Protocol::HTTPS, "vk.com", "/id999504", 2425);
             }
         }
     BOOST_AUTO_TEST_SUITE_END()
@@ -53,18 +54,20 @@ BOOST_AUTO_TEST_SUITE(CHttpURL)
         BOOST_AUTO_TEST_CASE(can_throw_an_exception)
         {
             ExpectException<CUrlParsingError>([&] {
-                CHttpUrl url("mysite.com");
+                CHttpUrl url("site.com");
             }, PROTOCOL_PARSING_ERROR);
 
             ExpectException<CUrlParsingError>([&] {
-                CHttpUrl url("htt://mysite.com");
+                CHttpUrl url("htt://site.com");
             }, INVALID_PROTOCOL);
         }
 
         BOOST_AUTO_TEST_CASE(can_parse_protocol)
         {
-            BOOST_CHECK(CHttpUrl("https://mysite.com/").GetProtocol() == Protocol::HTTPS);
-            BOOST_CHECK(CHttpUrl("http://mysite.com/").GetProtocol() == Protocol::HTTP);
+            BOOST_CHECK(CHttpUrl("https://site.com/").GetProtocol() == Protocol::HTTPS);
+            BOOST_CHECK(CHttpUrl("http://site.com/").GetProtocol() == Protocol::HTTP);
+			BOOST_CHECK(CHttpUrl("HTTp://site.com/").GetProtocol() == Protocol::HTTP);
+
         }
     BOOST_AUTO_TEST_SUITE_END()
 
@@ -73,7 +76,7 @@ BOOST_AUTO_TEST_SUITE(CHttpURL)
         BOOST_AUTO_TEST_CASE(can_throw_an_exception)
         {
             ExpectException<CUrlParsingError>([&] {
-                CHttpUrl url("https://mys ite.com/");
+                CHttpUrl url("https://s ite.com/");
             }, INVALID_DOMAIN);
 
             ExpectException<CUrlParsingError>([&] {
@@ -87,10 +90,11 @@ BOOST_AUTO_TEST_SUITE(CHttpURL)
 
         BOOST_AUTO_TEST_CASE(can_parse_domain)
         {
-            BOOST_CHECK(CHttpUrl("https://mysite.com").GetDomain() == "mysite.com");
+            BOOST_CHECK(CHttpUrl("https://site.com").GetDomain() == "site.com");
             BOOST_CHECK(CHttpUrl("https://localhost:8221").GetDomain() == "localhost");
-            BOOST_CHECK(CHttpUrl("http://mysite.ru/").GetDomain() == "mysite.ru");
-            BOOST_CHECK(CHttpUrl("http://mysite.ru:266/index.html").GetDomain() == "mysite.ru");
+            BOOST_CHECK(CHttpUrl("http://site.ru/").GetDomain() == "site.ru");
+            BOOST_CHECK(CHttpUrl("http://site.ru:266/index.html").GetDomain() == "site.ru");
+			BOOST_CHECK(CHttpUrl("http://SiTe.ru:266/index.html").GetDomain() == "site.ru");
         }
     BOOST_AUTO_TEST_SUITE_END()
 
@@ -99,29 +103,29 @@ BOOST_AUTO_TEST_SUITE(CHttpURL)
         BOOST_AUTO_TEST_CASE(can_throw_an_exception)
         {
             ExpectException<CUrlParsingError>([&] {
-                CHttpUrl url("https://mysite.com:");
+                CHttpUrl url("https://site.com:");
             }, PORT_PARSING_ERROR);
 
             ExpectException<CUrlParsingError>([&] {
-                CHttpUrl url("https://mysite.com:/");
+                CHttpUrl url("https://site.com:/");
             }, PORT_PARSING_ERROR);
 
             ExpectException<CUrlParsingError>([&] {
-                CHttpUrl url("https://mysite.com:23h41/");
+                CHttpUrl url("https://site.com:23h41/");
             }, BAD_LEXICAL_CAST);
 
             ExpectException<CUrlParsingError>([&] {
-                CHttpUrl url("https://mysite.ru:232353241/");
+                CHttpUrl url("https://site.ru:65537/");
             }, INVALID_PORT);
 			ExpectException<CUrlParsingError>([&] {
-				CHttpUrl url("https://mysite.ru:-1/");
+				CHttpUrl url("https://site.ru:-89/");
 			}, INVALID_PORT);
         }
 
         BOOST_AUTO_TEST_CASE(can_parse_port)
         {
-            BOOST_CHECK(CHttpUrl("https://mysite.com:3424").GetPort() == 3424);
-            BOOST_CHECK(CHttpUrl("https://mysite.com").GetPort() == 443);
+            BOOST_CHECK(CHttpUrl("https://site.com:3424").GetPort() == 3424);
+            BOOST_CHECK(CHttpUrl("https://site.com").GetPort() == 443);
             BOOST_CHECK(CHttpUrl("http://vk.com").GetPort() == 80);
         }
     BOOST_AUTO_TEST_SUITE_END()
@@ -131,14 +135,14 @@ BOOST_AUTO_TEST_SUITE(CHttpURL)
         BOOST_AUTO_TEST_CASE(can_throw_an_exception)
         {
             ExpectException<CUrlParsingError>([&] {
-                CHttpUrl url("https://mysite.com/index. php");
+                CHttpUrl url("https://site.com/index. php");
             }, INVALID_DOCUMENT);
         }
 
         BOOST_AUTO_TEST_CASE(can_parse_document)
         {
-            BOOST_CHECK(CHttpUrl("https://mysite.com").GetDocument() == "/");
-            BOOST_CHECK(CHttpUrl("https://mysite.com:3424").GetDocument() == "/");
+            BOOST_CHECK(CHttpUrl("https://site.com").GetDocument() == "/");
+            BOOST_CHECK(CHttpUrl("https://site.com:3424").GetDocument() == "/");
             BOOST_CHECK(CHttpUrl("http://alenacpp.blogspot.ru/2005/09/const-2.html").GetDocument() == "/2005/09/const-2.html");
         }
     BOOST_AUTO_TEST_SUITE_END()
@@ -147,8 +151,8 @@ BOOST_AUTO_TEST_SUITE(CHttpURL)
     BOOST_AUTO_TEST_SUITE(GetUrl)
         BOOST_AUTO_TEST_CASE(can_return_url)
         {
-            BOOST_CHECK(CHttpUrl("https://mysite.com").GetURL() == "https://mysite.com/");
-            BOOST_CHECK(CHttpUrl("http://alenacpp.blogspot.ru:3256/2005/09/const-2.html").GetURL() == "http://alenacpp.blogspot.ru:3256/2005/09/const-2.html");
+            BOOST_CHECK(CHttpUrl("https://site.com").GetURL() == "https://site.com/");
+            BOOST_CHECK(CHttpUrl("http://dimacpp.blogspot.ru:3256/2005/09/const-2.html").GetURL() == "http://dimacpp.blogspot.ru:3256/2005/09/const-2.html");
         }
     BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE_END()

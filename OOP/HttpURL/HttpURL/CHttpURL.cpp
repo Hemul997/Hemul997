@@ -97,6 +97,7 @@ Protocol CHttpUrl::ParseProtocol(std::string & urlRef) const
 		throw CUrlParsingError(PROTOCOL_PARSING_ERROR);
 	}
 	auto protocol = urlRef.substr(0, position);
+	boost::algorithm::to_lower(protocol);
 	urlRef = urlRef.substr(position + PROTOCOL_DELIMITER.size());
 	return ToProtocolType(protocol);
 }
@@ -112,7 +113,6 @@ void CHttpUrl::ValidateDomain(std::string const& domain) const
 	}
 }
 
-
 std::string CHttpUrl::ParseDomain(std::string & urlRef) const
 {
 	auto position = urlRef.find(":");
@@ -126,20 +126,22 @@ std::string CHttpUrl::ParseDomain(std::string & urlRef) const
 		throw CUrlParsingError(DOMAIN_PARSING_ERROR);
 	}
 	urlRef = urlRef.substr(domain.size());
+	boost::algorithm::to_lower(domain);
 	return domain;
 }
-bool ValidatePort(std::string const &portStr)
+
+unsigned short ValidatePort(int port)
 {
-	int port = stoi(portStr);
 	if (port < MIN_NUMBER_OF_PORT || port > MAX_NUMBER_OF_PORT)
 	{
-		return false;
+		throw CUrlParsingError(INVALID_PORT);
 	}
-	return true;
+	return port;
 }
+
 unsigned short CHttpUrl::ParsePort(std::string & urlRef) const
 {
-	unsigned short port;
+	int port;
 	if (urlRef[0] == ':')
 	{
 		auto endPos = urlRef.find('/');
@@ -151,16 +153,13 @@ unsigned short CHttpUrl::ParsePort(std::string & urlRef) const
 		}
 		try
 		{
-			port = boost::lexical_cast<unsigned short>(portStr);
+			port = boost::lexical_cast<int>(portStr);
 		}
 		catch (boost::bad_lexical_cast const& error)
 		{
 			throw CUrlParsingError(error.what());
 		}
-		if (!ValidatePort(portStr))
-		{
-			throw CUrlParsingError(INVALID_PORT);
-		}
+		ValidatePort(port);
 	}
 	else
 	{

@@ -61,6 +61,5 @@ private:
 	void ValidateDomain(std::string const & domain) const;
 	std::string ParseDomain(std::string & urlRef) const;
 	unsigned short ParsePort(std::string & urlRef) const;
-	
 };
 

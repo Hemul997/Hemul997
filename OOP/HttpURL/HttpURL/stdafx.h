@@ -12,6 +12,8 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <climits>
+#include <boost/algorithm/string.hpp>
+
 
 
 // TODO: reference additional headers your program requires here
