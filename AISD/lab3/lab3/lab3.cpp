@@ -1,3 +1,17 @@
+//ПС 22 Мошкин Никита
+//18. В   некотором   институте   информация   об   имеющихся
+//компьютерах  задана двумя деревьями.В первом из них сыновьям
+//корневой вершины соответствуют факультеты, факультеты в  свою
+//очередь  делятся  на  кафедры, кафедры  могут  иметь  в своем
+//составе лаборатории.Компьютеры могут быть установлены в общих
+//факультетских   классах, на   кафедрах, в  лабораториях  и
+//идентифицируются  уникальными  номерами.Во   втором   дереве
+//сыновьям корня соответствуют учебные корпуса, корпуса включают
+//списки  аудиторий, а  для  каждой  аудитории  заданы   номера
+//находящихся  в  них  компьютеров.Некоторые  аудитории  могут
+//принадлежать  нескольким  факультетам.Выдать  список   таких
+//аудиторий(12).
+
 #define _CRT_SECURE_NO_WARNINGS
 #include "stdafx.h"
 #include <iostream>
@@ -24,7 +38,6 @@ struct Tree
 	Tree *fath;         // отец в исходном дереве
 	Tree *left;
 	Tree *right;
-	string vertex;
 	bool Tlist;
 };
 struct Computers
@@ -33,6 +46,7 @@ struct Computers
 	string audiotory;
 };
 Tree *root1; Tree *root2;
+
 ostream & operator<<(ostream &out, const list<string> & obj)
 {
 	for (auto it = obj.begin(); it != obj.end(); ++it)
@@ -41,16 +55,17 @@ ostream & operator<<(ostream &out, const list<string> & obj)
 	}
 	return out;
 }
+
 void read_from_file(FILE *F, Tree **r);  // чтение из файла, формирование дерева
 void back_from_bin(Tree *p);            // выдача исходное дерева из бинарного
-long int Count(Tree *q); // подсчет чисел в дереве, а как?
-//void Find(Tree *t1, Tree *t2);
-void ObhodComputers(Tree *t, ofstream &outFile);
+long int Count(Tree *q); // подсчет чисел в дереве
+void GetComputersFromAuditories(Tree *t, ofstream &outFile);
+void GetComputersFromFaculties(Tree *t, ofstream &outFile);
 vector<Computers> ReadToVector(ifstream &inputFile);
 void outVector(vector<Computers> &computers);
 bool findInVector(int number, vector<Computers> &computers1);
 bool findAuditories(vector<Computers> &computers1, vector<Computers> &computers2, list<string> &auditories);
-
+bool findInVectorAud(int findNumber, string &findAud, vector<Computers> &computers1, vector<Computers> &computers2);
 int main(int argc, char* argv[])
 {
 	vector<Computers> computers1;
@@ -81,14 +96,12 @@ int main(int argc, char* argv[])
 	cout << "Кол-во строчек:" << Count(root1) << endl;
 	cout << "Кол-во строчек:"<< Count(root2) << endl;
 	cin.get();
-	ObhodComputers(root1, outFile);
-	ObhodComputers(root2, outFile2);
+	GetComputersFromFaculties(root1, outFile);
+	GetComputersFromAuditories(root2, outFile2);
 	outFile.close();
 	outFile2.close();
 	ifstream inpFile("out.txt");
 	ifstream inpFile2("out2.txt");
-
-	//Find(root2, root1);
 	cin.get();
 	computers1 = ReadToVector(inpFile);
 	computers2 = ReadToVector(inpFile2);
@@ -171,70 +184,64 @@ long int Count(Tree *q)
 void back_from_bin(Tree *p)
 {
 	int i;
-	string str, countVertex = "";
+	string str, countUrov = "";
 	if (p)
 	{
-		for (i = 0; i < p->urov; i++) countVertex += '.';
+		for (i = 0; i < p->urov; ++i) countUrov += '.';
 		str = p->name;
 		str += '\0';
-		cout << countVertex << str << endl;
+		cout << countUrov << str << endl;
 		back_from_bin(p->left);
 		back_from_bin(p->right);
 	}
 }
 
-//void Find(Tree *t1, Tree *t2)
-//{
-//	string name1;
-//	string name2;
-//	if (t1)
-//	{
-//		Find(t1->left, t2);
-//		Find(t1->right, t2);
-//		if (!t1->right || !t1->left) 
-//		{
-//			if (t2) 
-//			{
-//				Find(t1, t2->left);
-//				Find(t1, t2->right);
-//				if (!t2->right || !t2->left) 
-//				{
-//					if (t1->name == t2->name)
-//					{
-//						cout << "ok\n";
-//						cout << t1->fath->name << ' ' << t2->fath->name << endl;
-//					}
-//				}
-//			}
-//		}
-//	}
-//}
-void ObhodComputers(Tree *t , ofstream &outFile)
+void GetComputersFromAuditories(Tree *t , ofstream &outFile)
 {
 	int comp;
 	char num;
 	if (t)
 	{
-		ObhodComputers(t->left, outFile);
-		ObhodComputers(t->right, outFile);
+		GetComputersFromAuditories(t->left, outFile);
+		GetComputersFromAuditories(t->right, outFile);
 		if (!t->right || !t->left)
 		{
 			num = t->name[0];
-			if (isdigit(num))
+			if (isdigit(num) && t->urov > 2)
 			{
 				comp = stoi(t->name);
-				if (comp < 100)
+				outFile << comp << ' ' << t->fath->name << endl;
+			}
+		}
+	}
+}
+void GetComputersFromFaculties(Tree *t, ofstream &outFile)
+{
+	int comp;
+	char num;
+	if (t)
+	{
+		GetComputersFromFaculties(t->left, outFile);
+		GetComputersFromFaculties(t->right, outFile);
+		if (!t->right || !t->left)
+		{
+			num = t->name[0];
+			if (isdigit(num) && t->urov > 2)
+			{
+				comp = stoi(t->name);
+				if (t->urov == 4)
 				{
-					outFile << comp;
-					if (t->urov != 0)
-					{
-						outFile << ' ' << t->fath->name;
-					}
-					outFile << endl;
+					outFile << comp << ' ' << t->fath->fath->name << endl;
+				}
+				if (t->urov == 5)
+				{
+					outFile << comp << ' ' << t->fath->fath->fath->name << endl;
+				}
+				if (t->urov == 3)
+				{
+					outFile << comp << ' ' << t->fath->name << endl;
 				}
 			}
-
-
 		}
 	}
 }
@@ -242,8 +249,6 @@ vector<Computers> ReadToVector(ifstream &inputFile)
 {
 	vector<Computers> vector;
 	Computers computers;
-	int numberComp;
-	string name;
 	while (!inputFile.eof())
 	{
 		inputFile >> computers.Number >> computers.audiotory;
@@ -265,10 +270,18 @@ bool findAuditories(vector<Computers> &computers1, vector<Computers> &computers2
 {
 	for (auto it = computers2.begin(); it != computers2.end(); ++it)
 	{
-		if (findInVector(it->Number, computers1))
+		if (findInVector(it->Number, computers1) )
 		{
 			auditories.push_back(it->audiotory);
 		}
+		else
+		{
+			if (findInVectorAud(it->Number, it->audiotory, computers1, computers2))
+			{
+				auditories.push_back(it->audiotory);
+			}
+		}
+		
 	}
 	if (!auditories.empty())
 	{
@@ -286,6 +299,41 @@ bool findInVector(int number , vector<Computers> &computers1)
 	if (it != --rev_it.base())
 	{
 		return true;
+	}
+	
+	return false;
+}
+bool findInVectorAud(int findNumber, string &findAud, vector<Computers> &computers1, vector<Computers> &computers2)
+{
+	int nextComp;
+	string nextAud = "";
+	auto it = computers2.begin();
+	while (it != computers2.end())
+	{
+		if (it->Number == findNumber && it != computers2.end())
+		{
+			++it;
+			if (it != computers2.end())
+			{
+				nextComp = it->Number;
+				nextAud = it->audiotory;
+				break;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		++it;
+	}
+	if (nextAud == findAud)
+	{
+		auto it = std::find_if(computers1.begin(), computers1.end(), [&](const Computers & s)->bool { return s.Number == findNumber; });
+		auto it2 = std::find_if(computers1.begin(), computers1.end(), [&](const Computers & s)->bool { return s.Number == nextComp; });
+		if (it->audiotory != it2->audiotory)
+		{
+			return true;
+		}
 	}
 	return false;
 }
