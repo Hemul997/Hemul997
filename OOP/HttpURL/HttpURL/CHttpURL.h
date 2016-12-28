@@ -57,9 +57,10 @@ private:
 	std::string ToStringPort() const;
 	Protocol ToProtocolType(std::string const & protocol) const;
 	Protocol ParseProtocol(std::string & urlRef) const;
-	void ValidateDocument(std::string const & document) const;
-	void ValidateDomain(std::string const & domain) const;
 	std::string ParseDomain(std::string & urlRef) const;
 	unsigned short ParsePort(std::string & urlRef) const;
+	void ValidateDocument(std::string const & document) const;
+	void ValidateDomain(std::string const & domain) const;
+	void ValidatePort(int port) const;
 };
 

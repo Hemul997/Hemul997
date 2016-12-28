@@ -4,17 +4,20 @@
 #include "CHttpURL.h"
 #include "CUrlParsingError.h"
 #include "Errors.h"
+
 static const int MAX_NUMBER_OF_PORT = 65535;
 static const int MIN_NUMBER_OF_PORT = 1;
+static const std::string PROTOCOL_DELIMITER = "://";
+
 CHttpUrl::CHttpUrl(std::string const& url)
 {
-	std::string urlCopy(url);
-	m_protocol = ParseProtocol(urlCopy);
-	m_domain = ParseDomain(urlCopy);
+	std::string strUrl(url);
+	m_protocol = ParseProtocol(strUrl);
+	m_domain = ParseDomain(strUrl);
 	ValidateDomain(m_domain);
-	m_port = ParsePort(urlCopy);
-	ValidateDocument(urlCopy);
-	m_document = (urlCopy[0] == '/') ? urlCopy : "/";
+	m_port = ParsePort(strUrl);
+	ValidateDocument(strUrl);
+	m_document = (strUrl[0] == '/') ? strUrl : "/";
 };
 
 CHttpUrl::CHttpUrl(
@@ -130,15 +133,6 @@ std::string CHttpUrl::ParseDomain(std::string & urlRef) const
 	return domain;
 }
 
-unsigned short ValidatePort(int port)
-{
-	if (port < MIN_NUMBER_OF_PORT || port > MAX_NUMBER_OF_PORT)
-	{
-		throw CUrlParsingError(INVALID_PORT);
-	}
-	return port;
-}
-
 unsigned short CHttpUrl::ParsePort(std::string & urlRef) const
 {
 	int port;
@@ -174,5 +168,13 @@ void CHttpUrl::ValidateDocument(std::string const& document) const
 	if (isValidDocument)
 	{
 		throw CUrlParsingError(INVALID_DOCUMENT);
+	}
+}
+void CHttpUrl::ValidatePort(int port)const
+{
+	bool isValidPort(port < MIN_NUMBER_OF_PORT || port > MAX_NUMBER_OF_PORT);
+	if (isValidPort)
+	{
+		throw CUrlParsingError(INVALID_PORT);
 	}
 }

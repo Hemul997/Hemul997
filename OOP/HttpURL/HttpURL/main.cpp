@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "CHttpUrl.h"
 #include "CUrlParsingError.h"
+
 using namespace std;
+
 void PrintInfo(CHttpUrl const& url)
 {
     std::cout << "Protocol " << url.ToStringProtocol() << "\n"
@@ -21,7 +23,7 @@ int main()
         }
         catch (CUrlParsingError const& error)
         {
-            std::cout << error.what() << endl;
+            cout << error.what() << endl;
         }
     }
     return 0;

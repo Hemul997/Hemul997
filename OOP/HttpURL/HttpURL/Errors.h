@@ -1,6 +1,4 @@
 #pragma once
-static const std::string PROTOCOL_DELIMITER = "://";
-
 static const std::string INVALID_PROTOCOL = "Invalid protocol!";
 static const std::string PROTOCOL_PARSING_ERROR = "Protocol parsing error!";
 
