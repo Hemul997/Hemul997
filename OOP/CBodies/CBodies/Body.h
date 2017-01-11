@@ -11,6 +11,7 @@ public:
 	virtual double GetMass() const;
 	std::string ToString() const;
 
+	
 protected:
 	double m_density;
 	virtual void AddProperties(std::ostream& strm) const = 0;

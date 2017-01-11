@@ -1,6 +1,6 @@
 #pragma once
 #include "Body.h"
-class CSphere final :
+class CSphere :
 	public CBody
 {
 public:

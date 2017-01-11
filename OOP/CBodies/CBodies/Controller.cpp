@@ -5,10 +5,6 @@
 #include "Cone.h"
 #include "Sphere.h"
 #include "Parallelepiped.h"
-#include "Compound.h"
-
-using namespace std;
-using namespace std::placeholders;
 
 using namespace std;
 using namespace std::placeholders;
@@ -22,17 +18,16 @@ CBodyController::CBodyController(std::vector<std::shared_ptr<CBody>>& bodies, st
 		{ "Sphere", bind(&CBodyController::CreateSphere, this, _1) },
 		{ "Parallelepiped", bind(&CBodyController::CreateParallelepiped, this, _1) },
 		{ "Cone", bind(&CBodyController::CreateCone, this, _1) },
-		{ "Cylinder", bind(&CBodyController::CreateCylinder, this, _1) },
-		{ "Compound", bind(&CBodyController::CreateCompoundBody, this) },
+		{ "Cylinder", bind(&CBodyController::CreateCylinder, this, _1) }
 })
 {
-
 }
+
 bool CBodyController::HandleCommand()
 {
 	string commandLine;
 
-	if (!getline(m_input, commandLine) || (commandLine == "Finish"))
+	if (!getline(m_input, commandLine))
 	{
 		return false;
 	}
@@ -58,9 +53,7 @@ bool CBodyController::Help()
 		<< "> Sphere <density> <radius>\n"
 		<< "> Parallelepiped <density> <width> <height> <depth>\n"
 		<< "> Cone <density> <radius> <height>\n"
-		<< "> Cylinder <density> <radius> <height>\n"
-		<< "> Compound - to begining add elements to compound body\n"
-		<< "> Finish - to finish add elements to compound body or exit\n";
+		<< "> Cylinder <density> <radius> <height>\n";
 
 	return true;
 }
@@ -139,7 +132,7 @@ bool CBodyController::CreateSphere(std::istream& args)
 	if (!(args >> density) || !(args >> radius))
 	{
 		m_output << "Invalid count of arguments\n"
-			<< "Usage: Sphere <density> <radius>\n";
+				<< "Usage: Sphere <density> <radius>\n";
 		isAdded = false;
 	}
 
@@ -169,10 +162,9 @@ bool CBodyController::CreateParallelepiped(std::istream& args)
 	if (!(args >> density) || !(args >> width) || !(args >> height) || !(args >> depth))
 	{
 		m_output << "Invalid count of arguments\n"
-			<< "Usage: Parallelepiped <density> <width> <height> <depth>\n";
+				<< "Usage: Parallelepiped <density> <width> <height> <depth>\n";
 		isAdded = false;
 	}
-
 	if (isAdded)
 	{
 		try
@@ -198,7 +190,7 @@ bool CBodyController::CreateCone(std::istream& args)
 	if (!(args >> density) || !(args >> radius) || !(args >> height))
 	{
 		m_output << "Invalid count of arguments\n"
-			<< "Usage: Cone <density> <radius> <height>\n";
+				<< "Usage: Cone <density> <radius> <height>\n";
 		isAdded = false;
 	}
 
@@ -227,7 +219,7 @@ bool CBodyController::CreateCylinder(std::istream& args)
 	if (!(args >> density) || !(args >> radius) || !(args >> height))
 	{
 		m_output << "Invalid count of arguments\n"
-			<< "Usage: Cylinder <density> <radius> <height>\n";
+				<< "Usage: Cylinder <density> <radius> <height>\n";
 		isAdded = false;
 	}
 
@@ -243,24 +235,5 @@ bool CBodyController::CreateCylinder(std::istream& args)
 			m_output << e.what();
 		}
 	}
-	return isAdded;
-}
-
-bool CBodyController::CreateCompoundBody()
-{
-	bool isAdded = true;
-	shared_ptr<CCompound> compound = make_shared<CCompound>();
-	vector<shared_ptr<CBody>> elements;
-	CBodyController compoundController(elements, m_input, m_output);
-
-	while (m_output << "> ", compoundController.HandleCommand());
-	m_output << "Finish add to compound" "\n";
-
-	for (auto element : elements)
-	{
-		compound->AddBody(element);
-	}
-
-	m_bodies.push_back(compound);
 	return isAdded;
 }

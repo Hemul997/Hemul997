@@ -26,9 +26,9 @@ std::string CBody::ToString()const
 {
 	std::ostringstream strm;
 	strm << m_type << ":\n" 
-		<< "\tDensity = " << GetDensity() << std::endl
-		<< "\tVolume = " << GetVolume() << std::endl
-		<< "\tMass = " << GetMass() << std::endl;
+		<< "\tDensity: " << GetDensity() << std::endl
+		<< "\tVolume: " << GetVolume() << std::endl
+		<< "\tMass: " << GetMass() << std::endl;
 	AddProperties(strm);
 	return strm.str();
 }
