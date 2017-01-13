@@ -6,60 +6,119 @@
 
 struct MyStack
 {
-	CMyStack<int> IntStack;
-	CMyStack<std::string> StringStack;
+	CMyStack<int> intStack;
+	CMyStack<std::string> stringStack;
 };
+struct ThrowableStruct
+{
+	ThrowableStruct(bool throws)
+		: m_throws(throws)
+	{
 
+	}
+
+	ThrowableStruct()
+		: m_throws(true)
+	{
+		if (m_throws)
+		{
+			throw std::exception("constructor");
+		}
+	}
+
+	ThrowableStruct(ThrowableStruct const& arg)
+	{
+		if (m_throws)
+		{
+			throw std::exception("copy");
+		}
+	}
+
+	ThrowableStruct(ThrowableStruct && arg)
+	{
+		if (m_throws)
+		{
+			throw std::exception("move");
+		}
+	}
+
+	ThrowableStruct operator=(ThrowableStruct const& arg)
+	{
+		if (m_throws)
+		{
+			throw std::exception("assign");
+		}
+	}
+
+	~ThrowableStruct()
+	{
+		if (m_throws)
+		{
+			throw std::exception("destructor");
+		}
+	}
+
+
+private:
+	bool m_throws;
+};
 BOOST_FIXTURE_TEST_SUITE(My_stack, MyStack)
-	BOOST_AUTO_TEST_SUITE(Stack_Class)
+	BOOST_AUTO_TEST_CASE(in_constructor)
+	{
+		CMyStack<ThrowableStruct> stack;
+		BOOST_REQUIRE_NO_THROW(stack.Push(ThrowableStruct(false)));
+		BOOST_REQUIRE_THROW(stack.Push(ThrowableStruct(true)), std::exception);
+	}
+
+BOOST_AUTO_TEST_SUITE(Stack_Class)
 		BOOST_AUTO_TEST_CASE(is_empty_by_default)
 		{
-			BOOST_CHECK(IntStack.IsEmpty());
-			BOOST_CHECK(StringStack.IsEmpty());
+			BOOST_CHECK(intStack.IsEmpty());
+			BOOST_CHECK(stringStack.IsEmpty());
 		}
 		BOOST_AUTO_TEST_CASE(can_not_get_last_element_when_stack_is_empty)
 		{
-			BOOST_CHECK_THROW(IntStack.GetLastElement(), std::underflow_error);
-			BOOST_CHECK_THROW(StringStack.GetLastElement(), std::underflow_error);
+			BOOST_CHECK_THROW(intStack.GetLastElement(), std::underflow_error);
+			BOOST_CHECK_THROW(stringStack.GetLastElement(), std::underflow_error);
 		}
 		BOOST_AUTO_TEST_CASE(can_push_element)
 		{
-			IntStack.Push(4);
-			BOOST_CHECK(!IntStack.IsEmpty());
-			BOOST_CHECK_EQUAL(IntStack.GetLastElement(), 4);
+			intStack.Push(4);
+			BOOST_CHECK(!intStack.IsEmpty());
+			BOOST_CHECK_EQUAL(intStack.GetLastElement(), 4);
 
-			StringStack.Push("String");
-			BOOST_CHECK(!StringStack.IsEmpty());
-			BOOST_CHECK_EQUAL(StringStack.GetLastElement(), "String");
+			stringStack.Push("String");
+			BOOST_CHECK(!stringStack.IsEmpty());
+			BOOST_CHECK_EQUAL(stringStack.GetLastElement(), "String");
 		}
 		BOOST_AUTO_TEST_CASE(can_pop_element)
 		{
-			IntStack.Push(19);
-			BOOST_CHECK(!IntStack.IsEmpty());
+			intStack.Push(19);
+			BOOST_CHECK(!intStack.IsEmpty());
 
-			IntStack.Pop();
-			BOOST_CHECK(IntStack.IsEmpty());
+			intStack.Pop();
+			BOOST_CHECK(intStack.IsEmpty());
 
-			StringStack.Push("string");
-			BOOST_CHECK(!StringStack.IsEmpty());
+			stringStack.Push("string");
+			BOOST_CHECK(!stringStack.IsEmpty());
 
-			StringStack.Pop();
-			BOOST_CHECK(StringStack.IsEmpty());
+			stringStack.Pop();
+			BOOST_CHECK(stringStack.IsEmpty());
 		}
 		BOOST_AUTO_TEST_CASE(cant_pop_elements_when_stack_is_empty)
 		{
-			BOOST_CHECK_THROW(IntStack.Pop(), std::underflow_error);
+			BOOST_CHECK_THROW(intStack.Pop(), std::underflow_error);
 
-			BOOST_CHECK_THROW(StringStack.Pop(), std::underflow_error);
+			BOOST_CHECK_THROW(stringStack.Pop(), std::underflow_error);
 		}
 		BOOST_AUTO_TEST_CASE(can_get_size_of_stack)
 		{
-			IntStack.Push(1);
-			BOOST_CHECK_EQUAL(IntStack.GetSize(), (size_t)1);
+			intStack.Push(1);
+			BOOST_CHECK_EQUAL(intStack.GetSize(), (size_t)1);
 
-			StringStack.Push("word");
-			StringStack.Push("my");
-			BOOST_CHECK_EQUAL(StringStack.GetSize(), (size_t)2);
+			stringStack.Push("word");
+			stringStack.Push("my");
+			BOOST_CHECK_EQUAL(stringStack.GetSize(), (size_t)2);
 		}
 		BOOST_AUTO_TEST_CASE(can_delete_all_elements_in_stack)
 		{
@@ -68,120 +127,120 @@ BOOST_FIXTURE_TEST_SUITE(My_stack, MyStack)
 
 			for (size_t i = 0; i < currentSize; ++i)
 			{
-				IntStack.Push((int)i);
+				intStack.Push((int)i);
 			}
-			BOOST_CHECK_EQUAL(IntStack.GetSize(), currentSize);
+			BOOST_CHECK_EQUAL(intStack.GetSize(), currentSize);
 
-			IntStack.Clear();
-			BOOST_CHECK_EQUAL(IntStack.GetSize(), expectedSize);
+			intStack.Clear();
+			BOOST_CHECK_EQUAL(intStack.GetSize(), expectedSize);
 
 			for (size_t i = 0; i < currentSize; ++i)
 			{
-				StringStack.Push("string");
+				stringStack.Push("string");
 			}
-			BOOST_CHECK_EQUAL(StringStack.GetSize(), currentSize);
+			BOOST_CHECK_EQUAL(stringStack.GetSize(), currentSize);
 
-			StringStack.Clear();
-			BOOST_CHECK_EQUAL(StringStack.GetSize(), expectedSize);
+			stringStack.Clear();
+			BOOST_CHECK_EQUAL(stringStack.GetSize(), expectedSize);
 		}
 		BOOST_AUTO_TEST_CASE(can_be_constructed_from_other_stack)
 		{
-			IntStack.Push(97);
-			CMyStack<int> secondStack(IntStack);
-			BOOST_CHECK_EQUAL(secondStack.GetSize(), IntStack.GetSize());
-			BOOST_CHECK_EQUAL(secondStack.GetLastElement(), IntStack.GetLastElement());
+			intStack.Push(97);
+			CMyStack<int> secondStack(intStack);
+			BOOST_CHECK_EQUAL(secondStack.GetSize(), intStack.GetSize());
+			BOOST_CHECK_EQUAL(secondStack.GetLastElement(), intStack.GetLastElement());
 		}
 		BOOST_AUTO_TEST_CASE(can_compare_stacks)
 		{
 			CMyStack<int> newIntStack;
 
 			newIntStack.Push(12);
-			IntStack.Push(12);
-			BOOST_CHECK(IntStack == newIntStack);
+			intStack.Push(12);
+			BOOST_CHECK(intStack == newIntStack);
 
-			IntStack.Push(42);
+			intStack.Push(42);
 			newIntStack.Push(666);
 
-			BOOST_CHECK(IntStack != newIntStack);
+			BOOST_CHECK(intStack != newIntStack);
 
 			CMyStack<std::string> newStringStack;
 
 			newStringStack.Push("This world");
-			StringStack.Push("This world");
+			stringStack.Push("This world");
 
-			BOOST_CHECK(newStringStack == StringStack);
+			BOOST_CHECK(newStringStack == stringStack);
 
-			StringStack.Push("This world is mine");
-			BOOST_CHECK(newStringStack != StringStack);
+			stringStack.Push("This world is mine");
+			BOOST_CHECK(newStringStack != stringStack);
 		}
 
 		BOOST_AUTO_TEST_CASE(can_be_copied)
 		{
 			for (size_t i = 0; i < 10; ++i)
 			{
-				IntStack.Push((int)i);
-				StringStack.Push(std::to_string(i));
+				intStack.Push((int)i);
+				stringStack.Push(std::to_string(i));
 			}
 
-			CMyStack<int> newIntStack(IntStack);
+			CMyStack<int> newIntStack(intStack);
 
-			BOOST_CHECK_EQUAL(newIntStack.GetSize(), IntStack.GetSize());
-			BOOST_CHECK(newIntStack == IntStack);
+			BOOST_CHECK_EQUAL(newIntStack.GetSize(), intStack.GetSize());
+			BOOST_CHECK(newIntStack == intStack);
 
-			CMyStack<std::string> newStringStack(StringStack);
+			CMyStack<std::string> newStringStack(stringStack);
 
-			BOOST_CHECK_EQUAL(newStringStack.GetSize(), StringStack.GetSize());
-			BOOST_CHECK(newStringStack == StringStack);
+			BOOST_CHECK_EQUAL(newStringStack.GetSize(), stringStack.GetSize());
+			BOOST_CHECK(newStringStack == stringStack);
 		}
 
 		BOOST_AUTO_TEST_CASE(can_not_be_copied_by_itself)
 		{
 			for (size_t i = 0; i < 10; ++i)
 			{
-				IntStack.Push((int)i);
-				StringStack.Push(std::to_string(i));
+				intStack.Push((int)i);
+				stringStack.Push(std::to_string(i));
 			}
 
-			CMyStack<int> prevIntStackState = IntStack;
-			BOOST_CHECK(prevIntStackState == IntStack);
+			CMyStack<int> prevIntStackState = intStack;
+			BOOST_CHECK(prevIntStackState == intStack);
 
-			BOOST_CHECK_EQUAL(IntStack.GetSize(), (size_t)10);
+			BOOST_CHECK_EQUAL(intStack.GetSize(), (size_t)10);
 
-			IntStack = IntStack;
+			intStack = intStack;
 
-			BOOST_CHECK_EQUAL(IntStack.GetSize(), (size_t)10);
-			BOOST_CHECK(IntStack == prevIntStackState);
+			BOOST_CHECK_EQUAL(intStack.GetSize(), (size_t)10);
+			BOOST_CHECK(intStack == prevIntStackState);
 
 
 
-			CMyStack<std::string> prevStringStackState = StringStack;
-			BOOST_CHECK(prevStringStackState == StringStack);
+			CMyStack<std::string> prevStringStackState = stringStack;
+			BOOST_CHECK(prevStringStackState == stringStack);
 
-			BOOST_CHECK_EQUAL(StringStack.GetSize(), (size_t)10);
+			BOOST_CHECK_EQUAL(stringStack.GetSize(), (size_t)10);
 
-			StringStack = StringStack;
+			stringStack = stringStack;
 
-			BOOST_CHECK_EQUAL(StringStack.GetSize(), (size_t)10);
-			BOOST_CHECK(StringStack == prevStringStackState);
+			BOOST_CHECK_EQUAL(stringStack.GetSize(), (size_t)10);
+			BOOST_CHECK(stringStack == prevStringStackState);
 		}
 
 		BOOST_AUTO_TEST_CASE(can_be_moved)
 		{
 			for (size_t i = 0; i < 10; ++i)
 			{
-				IntStack.Push((int)i);
-				StringStack.Push(std::to_string(i));
+				intStack.Push((int)i);
+				stringStack.Push(std::to_string(i));
 			}
 
-			CMyStack<int> prevIntStackState = IntStack;
-			CMyStack<std::string> prevStringStackState = StringStack;
+			CMyStack<int> prevIntStackState = intStack;
+			CMyStack<std::string> prevStringStackState = stringStack;
 
-			CMyStack<int> newIntStack(std::move(IntStack));
-			BOOST_CHECK(IntStack.IsEmpty());
+			CMyStack<int> newIntStack(std::move(intStack));
+			BOOST_CHECK(intStack.IsEmpty());
 			BOOST_CHECK(newIntStack == prevIntStackState);
 
-			CMyStack<std::string> newStringStack = (std::move(StringStack));
-			BOOST_CHECK(StringStack.IsEmpty());
+			CMyStack<std::string> newStringStack = (std::move(stringStack));
+			BOOST_CHECK(stringStack.IsEmpty());
 			BOOST_CHECK(newStringStack == prevStringStackState);
 		}
 
@@ -189,20 +248,20 @@ BOOST_FIXTURE_TEST_SUITE(My_stack, MyStack)
 		{
 			for (size_t i = 0; i < 5; ++i)
 			{
-				IntStack.Push((int)i);
-				StringStack.Push(std::to_string(i));
+				intStack.Push((int)i);
+				stringStack.Push(std::to_string(i));
 			}
 
-			CMyStack<int> prevIntStackState = IntStack;
-			CMyStack<std::string> prevStringStackState = StringStack;
+			CMyStack<int> prevIntStackState = intStack;
+			CMyStack<std::string> prevStringStackState = stringStack;
 
-			IntStack = std::move(IntStack);
-			BOOST_CHECK(IntStack == prevIntStackState);
-			BOOST_CHECK_EQUAL(IntStack.GetSize(), (size_t)5);
+			intStack = std::move(intStack);
+			BOOST_CHECK(intStack == prevIntStackState);
+			BOOST_CHECK_EQUAL(intStack.GetSize(), (size_t)5);
 
-			StringStack = std::move(StringStack);
-			BOOST_CHECK(StringStack == prevStringStackState);
-			BOOST_CHECK_EQUAL(StringStack.GetSize(), (size_t)5);
+			stringStack = std::move(stringStack);
+			BOOST_CHECK(stringStack == prevStringStackState);
+			BOOST_CHECK_EQUAL(stringStack.GetSize(), (size_t)5);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 	

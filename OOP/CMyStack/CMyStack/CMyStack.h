@@ -54,7 +54,8 @@ public:
 	{
 		while (!IsEmpty())
 		{
-			Pop();
+			m_lastElement = m_lastElement->prevElement;
+			--m_size;
 		}
 	}
 
@@ -80,7 +81,7 @@ public:
 
 	CMyStack &operator =(CMyStack<T> const &stack)
 	{
-		if (*this != stack)
+		if (this != &stack)
 		{
 			Copy(stack);
 		}
@@ -90,7 +91,7 @@ public:
 
 	CMyStack &operator=(CMyStack<T> &&stack)
 	{
-		if (*this != stack)
+		if (this != &stack)
 		{
 			Move(stack);
 		}
@@ -130,13 +131,13 @@ public:
 private:
 	struct Node
 	{
-		T element = T();
+		T element;
 		std::shared_ptr<Node> prevElement = nullptr;
 	};
 
+	// commit-or-rollback
 	void Copy(CMyStack const &stack)
 	{
-		Clear();
 		auto tempNode = stack.m_lastElement;
 
 		auto seed = std::make_shared<Node>();

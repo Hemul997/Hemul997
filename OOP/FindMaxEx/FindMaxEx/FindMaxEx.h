@@ -3,11 +3,7 @@ template < typename T, typename Less>
 
 bool FindMaxEx(std::vector<T> const& arr, T& maxValue, Less const& less)
 {
-	bool isFinded = true;
-	if (arr.empty())
-	{
-		isFinded = false;
-	}
+	bool isFinded = !arr.empty();
 
 	if (isFinded)
 	{
