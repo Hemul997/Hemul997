@@ -22,14 +22,14 @@ void CStringStack::Push(std::string const &element)
 {
 	auto newElement = std::make_shared<Node>();
 
-	newElement->element = element;
+	newElement->value = element;
 
-	if (m_lastElement != nullptr)
+	if (m_top != nullptr)
 	{
-		newElement->prevElement = m_lastElement;
+		newElement->m_prevNode = m_top;
 	}
 
-	m_lastElement = newElement;
+	m_top = newElement;
 
 	++m_size;
 }
@@ -40,7 +40,7 @@ void CStringStack::Pop()
 		throw std::underflow_error("Can't pop element from empty stack.");
 	}
 
-	m_lastElement = m_lastElement->prevElement;
+	m_top = m_top->m_prevNode;
 
 	--m_size;
 }
@@ -58,7 +58,7 @@ std::string CStringStack::GetLastElement()const
 		throw std::underflow_error("Can't get last element from empty stack.");
 	}
 
-	return(m_lastElement->element);
+	return(m_top->value);
 }
 size_t CStringStack::GetSize()const
 {
@@ -73,28 +73,28 @@ CStringStack& CStringStack::operator =(CStringStack const &stack)
 {
 	if (this != &stack)
 	{
-		auto tempNode = stack.m_lastElement;
+		auto tempNode = stack.m_top;
 
 		auto seed = std::make_shared<Node>();
 		auto prevNode = seed;
 
-		seed->element = tempNode->element;
+		seed->value = tempNode->value;
 
-		tempNode = tempNode->prevElement;
+		tempNode = tempNode->m_prevNode;
 
 		while (tempNode != nullptr)
 		{
 			auto newNode = std::make_shared<Node>();
-			newNode->element = tempNode->element;
+			newNode->value = tempNode->value;
 
-			prevNode->prevElement = newNode;
+			prevNode->m_prevNode = newNode;
 			prevNode = newNode;
 
-			tempNode = tempNode->prevElement;
+			tempNode = tempNode->m_prevNode;
 		}
 
 		m_size = stack.GetSize();
-		m_lastElement = seed;
+		m_top = seed;
 	}
 
 	return *this;
@@ -103,10 +103,10 @@ CStringStack &CStringStack::operator=(CStringStack &&stack)
 {
 	if (this != &stack)
 	{
-		m_lastElement = stack.m_lastElement;
+		m_top = stack.m_top;
 		m_size = stack.GetSize();
 
-		stack.m_lastElement = nullptr;
+		stack.m_top = nullptr;
 		stack.m_size = 0;
 	}
 
@@ -119,18 +119,18 @@ bool CStringStack::operator ==(CStringStack const &stack)const
 		return false;
 	}
 
-	auto tempNode1 = m_lastElement;
-	auto tempNode2 = stack.m_lastElement;
+	auto tempNode1 = m_top;
+	auto tempNode2 = stack.m_top;
 
 	while (tempNode1 != nullptr)
 	{
-		if (tempNode1->element != tempNode2->element)
+		if (tempNode1->value != tempNode2->value)
 		{
 			return false;
 		}
 
-		tempNode1 = tempNode1->prevElement;
-		tempNode2 = tempNode2->prevElement;
+		tempNode1 = tempNode1->m_prevNode;
+		tempNode2 = tempNode2->m_prevNode;
 	}
 
 	return true;
