@@ -1,0 +1,1 @@
+Invert matrix doesn't exist, because determinant = 0
