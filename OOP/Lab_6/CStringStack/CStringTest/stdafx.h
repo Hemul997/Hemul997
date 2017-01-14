@@ -14,4 +14,7 @@
 #pragma warning (disable: 4702)
 #include <boost/test/unit_test.hpp>
 
+#include <memory>
+#include <string>
+
 // TODO: reference additional headers your program requires here

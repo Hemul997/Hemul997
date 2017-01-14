@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <tchar.h>
 
-#include <memory>
-#include <string>
+
 
 // TODO: reference additional headers your program requires here
