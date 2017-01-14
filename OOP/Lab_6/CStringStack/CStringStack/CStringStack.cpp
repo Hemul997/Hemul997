@@ -20,16 +20,16 @@ CStringStack::~CStringStack()
 }
 void CStringStack::Push(std::string const &element)
 {
-	auto newElement = std::make_shared<Node>();
+	auto newNode = std::make_shared<Node>();
 
-	newElement->value = element;
+	newNode->value = element;
 
 	if (m_top != nullptr)
 	{
-		newElement->m_prevNode = m_top;
+		newNode->m_prevNode = m_top;
 	}
 
-	m_top = newElement;
+	m_top = newNode;
 
 	++m_size;
 }
@@ -71,7 +71,7 @@ bool CStringStack::IsEmpty()const
 }
 CStringStack& CStringStack::operator =(CStringStack const &stack)
 {
-	if (this != &stack)
+	if (!stack.IsEmpty())
 	{
 		auto tempNode = stack.m_top;
 
@@ -92,11 +92,9 @@ CStringStack& CStringStack::operator =(CStringStack const &stack)
 
 			tempNode = tempNode->m_prevNode;
 		}
-
 		m_size = stack.GetSize();
 		m_top = seed;
 	}
-
 	return *this;
 }
 CStringStack &CStringStack::operator=(CStringStack &&stack)

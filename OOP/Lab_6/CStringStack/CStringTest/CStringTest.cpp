@@ -89,7 +89,11 @@ BOOST_FIXTURE_TEST_SUITE(My_stack, StringStack)
 			BOOST_CHECK_EQUAL(newStringStack.GetSize(), stringStack.GetSize());
 			BOOST_CHECK(newStringStack == stringStack);
 		}
-
+		BOOST_AUTO_TEST_CASE(can_not_copy_empty_stack)
+		{
+			CStringStack newStack = stringStack;
+			BOOST_CHECK(newStack.IsEmpty());
+		}
 		BOOST_AUTO_TEST_CASE(can_not_be_copied_by_itself)
 		{
 			for (size_t i = 0; i < 10; ++i)
