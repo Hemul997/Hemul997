@@ -1,6 +1,4 @@
 #pragma once
-#include "stdafx.h"
-
 #define MATRIX_ROW_NUM 3
 #define MATRIX_COL_NUM 3
 

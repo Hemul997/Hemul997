@@ -9,7 +9,7 @@ CCompound::CCompound()
 bool CCompound::AddBody(std::shared_ptr<CBody> const& element)
 {
 	bool isAdded = true;
-	if (this == element.get())
+	if (this == &(*element))
 	{
 		isAdded = false;
 	}

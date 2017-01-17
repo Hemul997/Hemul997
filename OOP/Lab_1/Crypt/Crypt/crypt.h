@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 
 static const int ARGUMENTS_COUNT = 5;
 static const std::string OPERATION_CRYPT = "crypt";
