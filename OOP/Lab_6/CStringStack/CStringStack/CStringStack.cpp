@@ -73,7 +73,9 @@ CStringStack& CStringStack::operator =(CStringStack const &stack)
 {
 	if (!stack.IsEmpty())
 	{
-		auto currentNode = stack.m_top->m_prevNode;
+		auto currentNode = stack.m_top;
+		m_top = currentNode;
+		currentNode = currentNode->m_prevNode;
 
 		while (currentNode != nullptr)
 		{
@@ -82,7 +84,6 @@ CStringStack& CStringStack::operator =(CStringStack const &stack)
 			currentNode = currentNode->m_prevNode;
 		}
 		m_size = stack.GetSize();
-		m_top = stack.m_top;
 	}
 	return *this;
 }

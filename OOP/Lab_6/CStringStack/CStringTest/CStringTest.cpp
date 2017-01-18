@@ -91,6 +91,7 @@ BOOST_FIXTURE_TEST_SUITE(My_string_stack, StringStack_)
 	{
 		CStringStack newStack;
 		newStack.Push("This world");
+		newStack.Push("is mine");
 		stack = newStack;
 		BOOST_CHECK(newStack == stack);
 	}
