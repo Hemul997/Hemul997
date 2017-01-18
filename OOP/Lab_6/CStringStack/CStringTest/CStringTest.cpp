@@ -20,7 +20,6 @@ BOOST_FIXTURE_TEST_SUITE(My_string_stack, StringStack_)
 	}
 	BOOST_AUTO_TEST_CASE(can_push_element)
 	{
-
 		stack.Push("String");
 		BOOST_CHECK(!stack.IsEmpty());
 		BOOST_CHECK_EQUAL(stack.GetLastElement(), "String");
@@ -60,21 +59,21 @@ BOOST_FIXTURE_TEST_SUITE(My_string_stack, StringStack_)
 	BOOST_AUTO_TEST_CASE(can_be_constructed_from_other_stack)
 	{
 		stack.Push("word");
-		CStringStack secondStack(stack);
-		BOOST_CHECK_EQUAL(secondStack.GetSize(), stack.GetSize());
-		BOOST_CHECK_EQUAL(secondStack.GetLastElement(), stack.GetLastElement());
+		CStringStack newStack(stack);
+		BOOST_CHECK_EQUAL(newStack.GetSize(), stack.GetSize());
+		BOOST_CHECK_EQUAL(newStack.GetLastElement(), stack.GetLastElement());
 	}
 	BOOST_AUTO_TEST_CASE(can_compare_stacks)
 	{
-		CStringStack newStringStack;
+		CStringStack newStack;
 
-		newStringStack.Push("This world");
+		newStack.Push("This world");
 		stack.Push("This world");
 
-		BOOST_CHECK(newStringStack == stack);
+		BOOST_CHECK(newStack == stack);
 
 		stack.Push("This world is mine");
-		BOOST_CHECK(newStringStack != stack);
+		BOOST_CHECK(newStack != stack);
 	}
 
 	BOOST_AUTO_TEST_CASE(can_be_copied)
@@ -84,43 +83,32 @@ BOOST_FIXTURE_TEST_SUITE(My_string_stack, StringStack_)
 			stack.Push(std::to_string(i));
 		}
 
-		CStringStack newStringStack(stack);
-
-		BOOST_CHECK_EQUAL(newStringStack.GetSize(), stack.GetSize());
-		BOOST_CHECK(newStringStack == stack);
+		CStringStack newStack(stack);
+		BOOST_CHECK_EQUAL(newStack.GetSize(), stack.GetSize());
+		BOOST_CHECK(newStack == stack);
+	}
+	BOOST_AUTO_TEST_CASE(can_copy_stack)
+	{
+		CStringStack newStack;
+		newStack.Push("This world");
+		stack = newStack;
+		BOOST_CHECK(newStack == stack);
 	}
 	BOOST_AUTO_TEST_CASE(can_not_copy_empty_stack)
 	{
 		CStringStack newStack = stack;
 		BOOST_CHECK(newStack.IsEmpty());
 	}
-	BOOST_AUTO_TEST_CASE(can_not_be_copied_by_itself)
-	{
-		for (size_t i = 0; i < 10; ++i)
-		{
-			stack.Push(std::to_string(i));
-		}
-		CStringStack prevStringStackState = stack;
-		BOOST_CHECK(prevStringStackState == stack);
-
-		BOOST_CHECK_EQUAL(stack.GetSize(), (size_t)10);
-
-		stack = stack;
-
-		BOOST_CHECK_EQUAL(stack.GetSize(), (size_t)10);
-		BOOST_CHECK(stack == prevStringStackState);
-	}
-
 	BOOST_AUTO_TEST_CASE(can_be_moved)
 	{
 		for (size_t i = 0; i < 10; ++i)
 		{
 			stack.Push(std::to_string(i));
 		}
-		CStringStack prevStringStackState = stack;
-		CStringStack newStringStack = (std::move(stack));
+		CStringStack prevStack = stack;
+		CStringStack newStack = (std::move(stack));
 		BOOST_CHECK(stack.IsEmpty());
-		BOOST_CHECK(newStringStack == prevStringStackState);
+		BOOST_CHECK(newStack == prevStack);
 	}
 
 	BOOST_AUTO_TEST_CASE(can_not_be_moved_by_itself)
@@ -130,10 +118,10 @@ BOOST_FIXTURE_TEST_SUITE(My_string_stack, StringStack_)
 			stack.Push(std::to_string(i));
 		}
 					
-		CStringStack prevStringStackState = stack;
+		CStringStack prevStack = stack;
 						
 		stack = std::move(stack);
-		BOOST_CHECK(stack == prevStringStackState);
+		BOOST_CHECK(stack == prevStack);
 		BOOST_CHECK_EQUAL(stack.GetSize(), (size_t)5);
 	}
 

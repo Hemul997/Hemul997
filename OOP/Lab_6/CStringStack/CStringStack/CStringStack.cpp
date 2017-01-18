@@ -73,27 +73,16 @@ CStringStack& CStringStack::operator =(CStringStack const &stack)
 {
 	if (!stack.IsEmpty())
 	{
-		auto tempNode = stack.m_top;
+		auto currentNode = stack.m_top->m_prevNode;
 
-		auto seed = std::make_shared<Node>();
-		auto prevNode = seed;
-
-		seed->value = tempNode->value;
-
-		tempNode = tempNode->m_prevNode;
-
-		while (tempNode != nullptr)
+		while (currentNode != nullptr)
 		{
 			auto newNode = std::make_shared<Node>();
-			newNode->value = tempNode->value;
-
-			prevNode->m_prevNode = newNode;
-			prevNode = newNode;
-
-			tempNode = tempNode->m_prevNode;
+			newNode->value = currentNode->value;
+			currentNode = currentNode->m_prevNode;
 		}
 		m_size = stack.GetSize();
-		m_top = seed;
+		m_top = stack.m_top;
 	}
 	return *this;
 }
@@ -117,18 +106,18 @@ bool CStringStack::operator ==(CStringStack const &stack)const
 		return false;
 	}
 
-	auto tempNode1 = m_top;
-	auto tempNode2 = stack.m_top;
+	auto firstCurrentNode = m_top;
+	auto secondCurrentNode = stack.m_top;
 
-	while (tempNode1 != nullptr)
+	while (firstCurrentNode != nullptr && secondCurrentNode != nullptr)
 	{
-		if (tempNode1->value != tempNode2->value)
+		if (firstCurrentNode->value != secondCurrentNode->value)
 		{
 			return false;
 		}
 
-		tempNode1 = tempNode1->m_prevNode;
-		tempNode2 = tempNode2->m_prevNode;
+		firstCurrentNode = firstCurrentNode->m_prevNode;
+		secondCurrentNode = secondCurrentNode->m_prevNode;
 	}
 
 	return true;
