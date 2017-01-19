@@ -107,18 +107,18 @@ bool CStringStack::operator ==(CStringStack const &stack)const
 		return false;
 	}
 
-	auto firstCurrentNode = m_top;
-	auto secondCurrentNode = stack.m_top;
+	auto firstNode = m_top;
+	auto secondNode = stack.m_top;
 
-	while (firstCurrentNode != nullptr && secondCurrentNode != nullptr)
+	while (firstNode != nullptr && secondNode != nullptr)
 	{
-		if (firstCurrentNode->value != secondCurrentNode->value)
+		if (firstNode->value != secondNode->value)
 		{
 			return false;
 		}
 
-		firstCurrentNode = firstCurrentNode->m_prevNode;
-		secondCurrentNode = secondCurrentNode->m_prevNode;
+		firstNode = firstNode->m_prevNode;
+		secondNode = secondNode->m_prevNode;
 	}
 
 	return true;

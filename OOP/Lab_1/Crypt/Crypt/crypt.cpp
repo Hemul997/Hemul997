@@ -69,11 +69,6 @@ bool IsValidKey(int key)
 		cout << "Failed key: " << key << endl;
 		success = false;
 	}
-	if (key == 0)
-	{
-		cout << "Incorrect value" << endl;
-		success = false;
-	}
 	return success;
 }
 
@@ -144,4 +139,8 @@ void Decrypt(ifstream &input, ofstream &output, int key)
 		value ^= key;
 		output << value;
 	}
+}
+bool IsNumber(char *Symbol)
+{
+	return (Symbol[0] >= '0' && Symbol[0] <= '9') ? (true) : (false);
 }

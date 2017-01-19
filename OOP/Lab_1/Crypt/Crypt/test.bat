@@ -20,7 +20,11 @@ if %ERRORLEVEL% EQU 1 goto err
                               
 
 rem Operation Validation        
-%PROGRAM% cry in.bin %TEMP%\out.bin 34
+%PROGRAM% cry in.bin %TEMP%\out.bin 255
+if %ERRORLEVEL% EQU 0 goto err
+fc.exe %TEMP%\out.bin in.bin 
+if %ERRORLEVEL% EQU 0 goto err
+%PROGRAM% cry in.bin %TEMP%\out.bin 0
 if %ERRORLEVEL% EQU 0 goto err
 fc.exe %TEMP%\out.bin in.bin 
 if %ERRORLEVEL% EQU 0 goto err

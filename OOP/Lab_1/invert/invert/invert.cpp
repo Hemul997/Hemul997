@@ -29,9 +29,7 @@ double FindDeterminantOfMatrix(Matrix  const&matrix)// метод треугольника
 
 double FindDetermOfMinor(double a11, double a12, double a21, double a22) // перемножение диагоналей
 {
-	double determ = 0;
-	determ = (a11*a22) - (a12*a21);
-	return determ;
+	return (a11*a22) - (a12*a21);
 };
 
 void PrintInvMatrix(Matrix const &matrix, ofstream &output)
