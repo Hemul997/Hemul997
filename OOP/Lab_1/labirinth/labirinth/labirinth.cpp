@@ -113,7 +113,6 @@ void DisseminateWave(Map map, Point & startPoint, Point & endPoint)
 	}
 
 	int step = 0;
-	//rename
 	bool foundWay;
 	map[startPoint.y][startPoint.x] = 0;
 
@@ -126,7 +125,6 @@ void DisseminateWave(Map map, Point & startPoint, Point & endPoint)
 			{
 				if (map[y][x] == step)
 				{
-					// 4 -> consts
 					for (int k = 0; k < 4; ++k)
 					{
 						int dy = y + direction[k].y, dx = x + direction[k].x;
