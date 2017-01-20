@@ -17,7 +17,7 @@ void ReadMatrixFromFile(ifstream &input, Matrix &mainMatrix)
 	}
 };
 
-double FindDeterminantOfMatrix(Matrix  const&matrix)// метод треугольника
+double FindDeterminantOfMatrix(Matrix const &matrix)// метод треугольника
 {
 	return  (matrix[0][0] * matrix[1][1] * matrix[2][2]
 				+ matrix[0][1] * matrix[1][2] * matrix[2][0]

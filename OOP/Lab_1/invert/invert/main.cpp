@@ -10,7 +10,7 @@ int main(int argc, char * argv[])
 	{
 		{
 			cout << "Invalid arguments count\n"
-				<< "Usage: copyfile.exe <input file> <output file>\n";
+				<< "Usage: invert.exe <input file> <output file>\n";
 			return 1;
 		}
 	}
