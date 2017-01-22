@@ -139,7 +139,7 @@ void DisseminateWave(Map map, Point & startPoint, Point & endPoint)
 				}
 			}
 		}
-		step++;
+		++step;
 	} while (foundWay && map[endPoint.y][endPoint.x] == END);
 }
 

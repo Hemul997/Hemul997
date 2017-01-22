@@ -61,8 +61,8 @@ bool AreValidInputAndOutputFiles(char * argv[], ifstream &input, ofstream &outpu
 
 bool IsValidKey(int key)
 {
-	static const int MAX_KEY = 255;
-	static const int MIN_KEY = 0;
+	const int MAX_KEY = 255;
+	const int MIN_KEY = 0;
 	bool success = true;
 	if ((key < MIN_KEY) || (key > MAX_KEY))
 	{
