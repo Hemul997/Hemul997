@@ -74,18 +74,17 @@ CStringStack& CStringStack::operator =(CStringStack const &stack)
 	if (!stack.IsEmpty())
 	{
 		auto currentNode = stack.m_top;
-		auto prevNode = std::make_shared<Node>();
-		prevNode->value = currentNode->value;
-		m_top = prevNode;
+		auto newNode = std::make_shared<Node>();
+		newNode->value = currentNode->value;
+		m_top = newNode;
 
 		currentNode = currentNode->next;
 		
 		while (currentNode != nullptr)
 		{
-			auto newNode = std::make_shared<Node>();
+			newNode->next = std::make_shared<Node>();
+			newNode = newNode->next;
 			newNode->value = currentNode->value;
-			prevNode->next = newNode;
-			prevNode = newNode;
 
 			currentNode = currentNode->next;
 		}
