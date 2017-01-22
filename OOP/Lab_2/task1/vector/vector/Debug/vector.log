@@ -1,4 +1,0 @@
-﻿  WorkWithVector.cpp
-stdafx.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
-  vector.vcxproj -> C:\Users\User\Documents\Hemul997\OOP\Lab_2\task1\vector\Debug\WorkWithVector.exe
-  vector.vcxproj -> C:\Users\User\Documents\Hemul997\OOP\Lab_2\task1\vector\Debug\WorkWithVector.pdb (Full PDB)
