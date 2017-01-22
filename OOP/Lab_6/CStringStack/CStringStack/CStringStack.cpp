@@ -26,7 +26,7 @@ void CStringStack::Push(std::string const &element)
 
 	if (m_top != nullptr)
 	{
-		newNode->m_prevNode = m_top;
+		newNode->next = m_top;
 	}
 
 	m_top = newNode;
@@ -40,7 +40,7 @@ void CStringStack::Pop()
 		throw std::underflow_error("Can't pop element from empty stack.");
 	}
 
-	m_top = m_top->m_prevNode;
+	m_top = m_top->next;
 
 	--m_size;
 }
@@ -74,17 +74,20 @@ CStringStack& CStringStack::operator =(CStringStack const &stack)
 	if (!stack.IsEmpty())
 	{
 		auto currentNode = stack.m_top;
-		auto temporaryNode = std::make_shared<Node>();
-		temporaryNode->value = currentNode->value;
-		m_top = temporaryNode;
+		auto prevNode = std::make_shared<Node>();
+		prevNode->value = currentNode->value;
+		m_top = prevNode;
 
-		currentNode = currentNode->m_prevNode;
-
+		currentNode = currentNode->next;
+		
 		while (currentNode != nullptr)
 		{
 			auto newNode = std::make_shared<Node>();
 			newNode->value = currentNode->value;
-			currentNode = currentNode->m_prevNode;
+			prevNode->next = newNode;
+			prevNode = newNode;
+
+			currentNode = currentNode->next;
 		}
 		m_size = stack.GetSize();
 	}
@@ -120,8 +123,8 @@ bool CStringStack::operator ==(CStringStack const &stack)const
 			return false;
 		}
 
-		firstNode = firstNode->m_prevNode;
-		secondNode = secondNode->m_prevNode;
+		firstNode = firstNode->next;
+		secondNode = secondNode->next;
 	}
 
 	return true;

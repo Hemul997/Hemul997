@@ -93,12 +93,26 @@ BOOST_FIXTURE_TEST_SUITE(My_string_stack, StringStack_)
 		newStack.Push("This world");
 		newStack.Push("is mine");
 		stack = newStack;
+		BOOST_CHECK_EQUAL(newStack.GetLastElement(), "is mine");
+		BOOST_CHECK_EQUAL(newStack.GetSize(), stack.GetSize());
 		BOOST_CHECK(newStack == stack);
 	}
 	BOOST_AUTO_TEST_CASE(can_not_copy_empty_stack)
 	{
 		CStringStack newStack = stack;
 		BOOST_CHECK(newStack.IsEmpty());
+	}
+	BOOST_AUTO_TEST_CASE(can_not_be_copied_by_itself)
+	{
+		for (size_t i = 0; i < 10; ++i)
+		{
+			stack.Push(std::to_string(i));
+		}
+		
+		CStringStack prevStack = stack;
+		stack = stack;
+		BOOST_CHECK(stack == prevStack);
+		BOOST_CHECK_EQUAL(stack.GetSize(), (size_t)10);
 	}
 	BOOST_AUTO_TEST_CASE(can_be_moved)
 	{

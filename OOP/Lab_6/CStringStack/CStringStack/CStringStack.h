@@ -21,7 +21,7 @@ private:
 	struct Node
 	{
 		std::string value;
-		std::shared_ptr<Node> m_prevNode = nullptr;
+		std::shared_ptr<Node> next = nullptr;
 	};
 	std::shared_ptr<Node> m_top = nullptr;
 	size_t m_size = 0;
