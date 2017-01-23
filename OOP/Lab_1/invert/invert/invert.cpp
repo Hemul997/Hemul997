@@ -57,7 +57,6 @@ void PrintInvertMatrix(Matrix const &matrix, ofstream &outputFile)
 
 double FindMinor(Matrix &matrix, int i, int j)
 {
-	double minor;
 	double valueOfMinor[4];
 	int index = 0;
 	for (int row = 0; row < MATRIX_ROW_NUM; ++row)
@@ -74,14 +73,13 @@ double FindMinor(Matrix &matrix, int i, int j)
 			}
 		}
 	}
-	minor = FindDeterminantOfMinor(valueOfMinor[0], valueOfMinor[1], valueOfMinor[2], valueOfMinor[3]);
-	return minor;
+	return FindDeterminantOfMinor(valueOfMinor[0], valueOfMinor[1], valueOfMinor[2], valueOfMinor[3]);
 };
 
 bool IsNeedInverseSign(int columnNumber,int rowNumber)
 {
-	int summNumbers = columnNumber + rowNumber;
-	return ((summNumbers % 2 != 0) && (summNumbers != 0));
+	int sumOfNumbers = columnNumber + rowNumber;
+	return ((sumOfNumbers % 2 != 0) && (sumOfNumbers != 0));
 }
 
 void InverseOfMatrix(Matrix &matrix, Matrix &invMatrix, const double determ)
