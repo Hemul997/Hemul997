@@ -5,31 +5,19 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
-
-	if (argc != 3)
+	if (!IsValidNumArguments(argc))
 	{
-		{
-			cout << "Invalid arguments count\n"
-				<< "Usage: invert.exe <input file> <output file>\n";
-			return 1;
-		}
+		return 1;
 	}
 
 	ifstream inputFile;
 	inputFile.open(argv[1]);
-	if (!inputFile.is_open())
-	{
-		cout << "Failed to open " << argv[1] << " for reading\n";
-		return 1;
-	}
-
 	ofstream outputFile(argv[2]);
-	if (!outputFile.is_open())
+
+	if (!AreValidInputAndOutputFiles(argv, inputFile, outputFile))
 	{
-		cout << "Failed to open " << argv[2] << " for writing\n";
 		return 1;
 	}
-
 	Matrix matrix;
 	ReadMatrixFromFile(inputFile, matrix);
 	double determ = FindDeterminantOfMatrix(matrix);

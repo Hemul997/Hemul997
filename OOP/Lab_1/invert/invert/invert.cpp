@@ -6,13 +6,38 @@
 
 using namespace std;
 
-void ReadMatrixFromFile(ifstream &input, Matrix &mainMatrix)
+bool IsValidNumArguments(int argc)
+{
+	bool success = true;
+	if (argc != 3)
+	{
+		cout << "Invalid arguments count\n"
+			<< "Usage: invert.exe <input file> <output file>\n";
+		success = false;
+	}
+	return success;
+}
+bool AreValidInputAndOutputFiles(char * argv[], ifstream &inputFile, ofstream &outputFile)
+{
+	if (!inputFile.is_open())
+	{
+		cout << "Failed to open " << argv[1] << " for reading\n";
+		return  false;
+	}
+	if (!outputFile.is_open())
+	{
+		cout << "Failed to open " << argv[2] << " for writing" << endl;
+		return false;
+	}
+	return true;
+}
+void ReadMatrixFromFile(ifstream &inputFile, Matrix &mainMatrix)
 {
 	for (int i = 0; i < MATRIX_ROW_NUM; ++i)
 	{
 		for (int j = 0; j < MATRIX_COL_NUM; ++j)
 		{
-			input >> mainMatrix[i][j];
+			inputFile >> mainMatrix[i][j];
 		}
 	}
 };
@@ -32,15 +57,15 @@ double FindDetermOfMinor(double a11, double a12, double a21, double a22) // пере
 	return (a11*a22) - (a12*a21);
 };
 
-void PrintInvMatrix(Matrix const &matrix, ofstream &output)
+void PrintInvMatrix(Matrix const &matrix, ofstream &outputFile)
 {
 	for (int i = 0; i < MATRIX_ROW_NUM; ++i)
 	{
 		for (int j = 0; j < MATRIX_COL_NUM; ++j)
 		{
-			output << fixed << setprecision(3) << matrix[i][j] << ' ';
+			outputFile << fixed << setprecision(3) << matrix[i][j] << ' ';
 		}
-		output << endl;
+		outputFile << endl;
 	}
 };
 

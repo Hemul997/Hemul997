@@ -16,10 +16,10 @@ int main(int argc, char * argv[])
 		return 1;
 	}
 
-	ifstream input(argv[2], ios::binary | ios::in);
-	ofstream output(argv[3], ios::binary | ios::out);
+	ifstream inputFile(argv[2], ios::binary | ios::in);
+	ofstream outputFile(argv[3], ios::binary | ios::out);
 
-	if (!AreValidInputAndOutputFiles(argv, input, output))
+	if (!AreValidInputAndOutputFiles(argv, inputFile, outputFile))
 	{
 		return 1;
 	}
@@ -33,15 +33,15 @@ int main(int argc, char * argv[])
 		return 1;
 	}
 
-	(operation == OPERATION_CRYPT) ? Crypt(input, output, key) : Decrypt(input, output, key);
+	(operation == OPERATION_CRYPT) ? Crypt(inputFile, outputFile, key) : Decrypt(inputFile, outputFile, key);
 
-	if (FailedToSaveData(output))
+	if (FailedToSaveData(outputFile))
 	{
 		return 1;
 	}
 
-	input.close();
-	output.close();
+	inputFile.close();
+	outputFile.close();
 
 	return 0;
 }
