@@ -17,12 +17,24 @@ int main(int argc, char * argv[])
 	}
 
 	ifstream inputFile(argv[2], ios::binary | ios::in);
-	ofstream outputFile(argv[3], ios::binary | ios::out);
-
-	if (!AreValidInputAndOutputFiles(argv, inputFile, outputFile))
+	if (!inputFile.is_open())
 	{
+		cout << "Failed to open " << argv[2] << " for reading\n";
 		return 1;
 	}
+	if (inputFile.peek() == ifstream::traits_type::eof())
+	{
+		cout << "File " << argv[2] << " is empty" << endl;
+		return 1;
+	}
+	ofstream outputFile(argv[3], ios::binary | ios::out);
+	
+	if (!outputFile.is_open())
+	{
+		cout << "Failed to open " << argv[3] << " for writing" << endl;
+		return 1;
+	}
+	
 	if (!IsNumber(argv[4]))
 	{
 		return 1;

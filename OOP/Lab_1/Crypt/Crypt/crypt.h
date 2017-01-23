@@ -9,8 +9,5 @@ void Decrypt(std::ifstream &input, std::ofstream &output, int key);
 bool IsValidNumArguments(int argc);
 bool IsValidOperation(const std::string &operation);
 bool IsValidKey(int key);
-bool AreValidInputAndOutputFiles(char * argv[], std::ifstream &input, std::ofstream &output);
-char MixBitsForCrypt(const char &value);
-char MixBitsForDecrypt(const char &value);
 bool FailedToSaveData(std::ofstream &output);
 bool IsNumber(char *Symbol);

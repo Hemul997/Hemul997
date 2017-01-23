@@ -39,26 +39,6 @@ bool IsValidOperation(const string &operation)
 	return success;
 }
 
-bool AreValidInputAndOutputFiles(char * argv[], ifstream &inputFile, ofstream &outputFile)
-{
-	if (!inputFile.is_open())
-	{
-		cout << "Failed to open " << argv[2] << " for reading\n";
-		return  false;
-	}
-	if (inputFile.peek() == ifstream::traits_type::eof())
-	{
-		cout << "File " << argv[2] << " is empty" << endl;
-		return  false;
-	}
-	if (!outputFile.is_open())
-	{
-		cout << "Failed to open " << argv[3] << " for writing" << endl;
-		return false;
-	}
-	return true;
-}
-
 bool IsValidKey(int key)
 {
 	const int MAX_KEY = 255;
