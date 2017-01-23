@@ -12,10 +12,16 @@ int main(int argc, char * argv[])
 
 	ifstream inputFile;
 	inputFile.open(argv[1]);
-	ofstream outputFile(argv[2]);
-
-	if (!AreValidInputAndOutputFiles(argv, inputFile, outputFile))
+	\
+	if (!inputFile.is_open())
 	{
+		cout << "Failed to open " << argv[1] << " for reading\n";
+		return 1;
+	}
+	ofstream outputFile(argv[2]);
+	if (!outputFile.is_open())
+	{
+		cout << "Failed to open " << argv[2] << " for writing" << endl;
 		return 1;
 	}
 	Matrix matrix;
@@ -28,7 +34,7 @@ int main(int argc, char * argv[])
 	}
 	Matrix inverseMatrix;
 	InverseOfMatrix(matrix, inverseMatrix, determ);
-	PrintInvMatrix(inverseMatrix, outputFile);
+	PrintInvertMatrix(inverseMatrix, outputFile);
 	if (!outputFile.flush())
 	{
 		cout << "Failed to save data on disk\n";

@@ -8,29 +8,15 @@ using namespace std;
 
 bool IsValidNumArguments(int argc)
 {
-	bool success = true;
 	if (argc != 3)
 	{
 		cout << "Invalid arguments count\n"
 			<< "Usage: invert.exe <input file> <output file>\n";
-		success = false;
-	}
-	return success;
-}
-bool AreValidInputAndOutputFiles(char * argv[], ifstream &inputFile, ofstream &outputFile)
-{
-	if (!inputFile.is_open())
-	{
-		cout << "Failed to open " << argv[1] << " for reading\n";
-		return  false;
-	}
-	if (!outputFile.is_open())
-	{
-		cout << "Failed to open " << argv[2] << " for writing" << endl;
 		return false;
 	}
 	return true;
 }
+
 void ReadMatrixFromFile(ifstream &inputFile, Matrix &mainMatrix)
 {
 	for (int i = 0; i < MATRIX_ROW_NUM; ++i)
@@ -52,12 +38,12 @@ double FindDeterminantOfMatrix(Matrix const &matrix)// метод треугольника
 				- matrix[0][2] * matrix[1][1] * matrix[2][0]);
 };
 
-double FindDetermOfMinor(double a11, double a12, double a21, double a22) // перемножение диагоналей
+double FindDeterminantOfMinor(double a11, double a12, double a21, double a22) // перемножение диагоналей
 {
 	return (a11*a22) - (a12*a21);
 };
 
-void PrintInvMatrix(Matrix const &matrix, ofstream &outputFile)
+void PrintInvertMatrix(Matrix const &matrix, ofstream &outputFile)
 {
 	for (int i = 0; i < MATRIX_ROW_NUM; ++i)
 	{
@@ -69,7 +55,7 @@ void PrintInvMatrix(Matrix const &matrix, ofstream &outputFile)
 	}
 };
 
-double FindMinor(Matrix &matrix, const int &i, const int &j)
+double FindMinor(Matrix &matrix, int i, int j)
 {
 	double minor;
 	double valueOfMinor[4];
@@ -88,14 +74,14 @@ double FindMinor(Matrix &matrix, const int &i, const int &j)
 			}
 		}
 	}
-	minor = FindDetermOfMinor(valueOfMinor[0], valueOfMinor[1], valueOfMinor[2], valueOfMinor[3]);
+	minor = FindDeterminantOfMinor(valueOfMinor[0], valueOfMinor[1], valueOfMinor[2], valueOfMinor[3]);
 	return minor;
 };
 
-bool IsNeedInverseSign(const int& columnNumber, const int & rowNumber)
+bool IsNeedInverseSign(int columnNumber,int rowNumber)
 {
-	int Summ = columnNumber + rowNumber;
-	return ((Summ % 2 != 0) && (Summ != 0));
+	int summNumbers = columnNumber + rowNumber;
+	return ((summNumbers % 2 != 0) && (summNumbers != 0));
 }
 
 void InverseOfMatrix(Matrix &matrix, Matrix &invMatrix, const double determ)
