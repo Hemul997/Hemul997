@@ -7,49 +7,45 @@ using namespace std;
 
 bool FailedToSaveData(ofstream &output)
 {
-	bool error = false;
 	if (!output.flush())
 	{
 		cout << "Failed to save data on disk\n";
-		error = true;
+		return true;
 	}
-	return error;
+	return false;
 }
 
 bool IsValidNumArguments(int argc)
 {
-	bool success = true;
 	if (argc != ARGUMENTS_COUNT)
 	{
 		cout << "Invalid arguments count\n"
 			<< "Usage: crypt.exe (crypt/decrypt) <input file> <output file> <key> \n";
-		success = false;
+		return false;
 	}
-	return success;
+	return true;
 }
 
 bool IsValidOperation(const string &operation)
 {
-	bool success = true;
 	if ((operation != OPERATION_CRYPT) && (operation != OPERATION_DECRYPT))
 	{
 		cout << "Invalid operation\n";
-		success = false;
+		return false;
 	}
-	return success;
+	return true;
 }
 
 bool IsValidKey(int key)
 {
 	const int MAX_KEY = 255;
 	const int MIN_KEY = 0;
-	bool success = true;
 	if ((key < MIN_KEY) || (key > MAX_KEY))
 	{
 		cout << "Failed key: " << key << endl;
-		success = false;
+		return false;
 	}
-	return success;
+	return true;
 }
 
 char MixBitsForCrypt(const char &value)
@@ -120,7 +116,7 @@ void Decrypt(ifstream &input, ofstream &output, int key)
 		output << value;
 	}
 }
-bool IsNumber(char *Symbol)
+bool IsNumber(char *symbol)
 {
-	return (Symbol[0] >= '0' && Symbol[0] <= '9') ? (true) : (false);
+	return (symbol[0] >= '0' && symbol[0] <= '9') ? (true) : (false);
 }
