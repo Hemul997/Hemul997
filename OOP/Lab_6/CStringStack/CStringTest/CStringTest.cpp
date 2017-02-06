@@ -110,7 +110,8 @@ BOOST_FIXTURE_TEST_SUITE(My_string_stack, StringStack_)
 		}
 		
 		CStringStack prevStack = stack;
-		stack = stack;
+		//stack = stack;
+		BOOST_CHECK_THROW(stack = stack, std::invalid_argument);
 		BOOST_CHECK(stack == prevStack);
 		BOOST_CHECK_EQUAL(stack.GetSize(), (size_t)10);
 	}

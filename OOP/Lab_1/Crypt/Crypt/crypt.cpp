@@ -51,23 +51,12 @@ bool IsValidKey(int key)
 char MixBitsForCrypt(const char &value)
 {
 	char newValue = '\0';
-	int currentRank = 0x80;
-
-	newValue += ((value & (currentRank)) >> 2);
-
-	newValue += ((value & (currentRank >>= 1)) >> 5);
-
-	newValue += ((value & (currentRank >>= 1)) >> 5);
-
-	newValue += ((value & (currentRank >>= 1)) << 3);
-
-	newValue += ((value & (currentRank >>= 1)) << 3);
-
-	newValue += ((value & (currentRank >>= 1)) << 2);
-
-	newValue += ((value & (currentRank >>= 1)) << 2);
-
-	newValue += ((value & (currentRank >>= 1)) << 2);
+	
+	newValue += ((value & 0b10000000) >> 2);
+	newValue += ((value & 0b01100000) >> 5);
+	newValue += ((value & 0b00011000) << 3);
+	newValue += ((value & 0b00000111) << 2);
+	
 	return newValue;
 }
 
@@ -116,7 +105,7 @@ void Decrypt(ifstream &input, ofstream &output, int key)
 		output << value;
 	}
 }
-bool IsNumber(char *symbol)
+bool IsNumber(char *Symbol)
 {
-	return (symbol[0] >= '0' && symbol[0] <= '9') ? (true) : (false);
+	return (Symbol[0] >= '0' && Symbol[0] <= '9') ? (true) : (false);
 }

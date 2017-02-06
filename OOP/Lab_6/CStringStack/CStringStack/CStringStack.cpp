@@ -23,11 +23,7 @@ void CStringStack::Push(std::string const &element)
 	auto newNode = std::make_shared<Node>();
 
 	newNode->value = element;
-
-	if (m_top != nullptr)
-	{
-		newNode->next = m_top;
-	}
+	newNode->next = m_top;
 
 	m_top = newNode;
 
@@ -71,15 +67,25 @@ bool CStringStack::IsEmpty()const
 }
 CStringStack& CStringStack::operator =(CStringStack const &stack)
 {
-	if (!stack.IsEmpty())
+	if (this == &stack)
+	{
+		throw std::invalid_argument("Can't copy itself");
+	}
+
+	if (stack.IsEmpty())
+	{
+		m_top = nullptr;
+	}
+	else
 	{
 		auto currentNode = stack.m_top;
 		auto newNode = std::make_shared<Node>();
-		newNode->value = currentNode->value;
-		m_top = newNode;
+		//auto topNode = &newNode;
+		/*newNode->value = currentNode->value;
+		m_top = newNode;*/
 
-		currentNode = currentNode->next;
-		
+		//currentNode = currentNode->next;
+
 		while (currentNode != nullptr)
 		{
 			newNode->next = std::make_shared<Node>();
@@ -88,8 +94,12 @@ CStringStack& CStringStack::operator =(CStringStack const &stack)
 
 			currentNode = currentNode->next;
 		}
+		//m_top = topNode
 		m_size = stack.GetSize();
 	}
+
+	
+	
 	return *this;
 }
 CStringStack &CStringStack::operator=(CStringStack &&stack)
